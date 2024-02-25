@@ -80,8 +80,8 @@ const config = {
         xmd: "25px",
         md: "20px",
         sm:"16px",
-        xsm:"15px",
-        xxsm:"11px"
+        xsm:"13px",
+        xxsm:"8px"
       },
       animation: {
         scroll:

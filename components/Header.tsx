@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const Header = () => {
   return (
-    <div className=" flex justify-between items-center w-screen py-5 px-20">
+    <div className=" flex fixed z-0 justify-between items-center w-screen py-5 px-20">
       <Image src={logo} alt={"logo"} />
 
       <Sheet>
