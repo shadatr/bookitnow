@@ -1,33 +1,101 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import logo from "../public/BookItNow.png";
 import Image from "next/image";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
+import { LuMessageSquare } from "react-icons/lu";
+import { RiNotification4Line } from "react-icons/ri";
+import { TbPlaneInflight } from "react-icons/tb";
+import { FaRegHeart } from "react-icons/fa";
+import { BiHomeAlt } from "react-icons/bi";
+import { supabase } from "@/lib/supabase";
+import { Session } from "@supabase/supabase-js";
+import { IoMdLogOut } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
-  return (
-    <div className=" flex fixed z-0 justify-between items-center w-screen py-5 px-20">
-      <Image src={logo} alt={"logo"} />
+  const [session, setSession] = useState<Session | null>();
+  const router = useRouter();
+  // const currentPathname = router.pathname;
+  const isActive = (path: string) => location.pathname === path;
 
-      <Sheet>
-        <SheetTrigger>
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-          </Avatar>
-        </SheetTrigger>
-        <SheetContent className="bg-secondary flex flex-col text-md font-bold gap-0 m-0 px-0 py-10">
-            <Link href="/messages" className="hover:bg-lightGray p-3 transtion-bg">Messages</Link>
-            <Link  href="/notification" className="hover:bg-lightGray p-3 transtion-bg">Notification</Link>
-            <Link  href="/trips" className="hover:bg-lightGray p-3 transtion-bg">Trips</Link>
-            <Link href="/favorites" className="hover:bg-lightGray p-3 transtion-bg">Favorites</Link>
-            <Link href="/hosting" className="hover:bg-lightGray p-3 transtion-bg">Manage Hosting </Link>
-        </SheetContent>
-      </Sheet>
+  useEffect(() => {
+    const getSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      setSession(data.session);
+    };
+    getSession();
+  },[]);
+
+  const logout = async () => {
+    const { error } = await supabase.auth.signOut({});
+    if (!error) {
+      router.push("/");
+    } else {
+      console.error("Error logging out:", error.message);
+    }
+  };
+
+  return (
+    <div className="flex fixed z-0 justify-between items-center w-screen py-5 px-20">
+      <Image src={logo} alt={"logo"} />
+      {session?.user ? (
+        <Sheet>
+          <SheetTrigger>
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+            </Avatar>
+          </SheetTrigger>
+          <SheetContent className="bg-secondary flex flex-col text-md font-bold gap-0 m-0 px-0 py-10">
+            <Link
+              href="/messages"
+              className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"
+            >
+              <LuMessageSquare color="#EE3080" size={25} />
+              <p>Messages</p>
+            </Link>
+            <Link
+              href="/notifications"
+              className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"
+            >
+              <RiNotification4Line color="#EE3080" size={25} />
+              <p>Notifications</p>
+            </Link>
+            <Link
+              href="/trips"
+              className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"
+            >
+              <TbPlaneInflight color="#EE3080" size={25} />
+              <p>Trips</p>
+            </Link>
+            <Link
+              href="/favorites"
+              className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"
+            >
+              <FaRegHeart color="#EE3080" size={25} />
+              <p>Favorites</p>
+            </Link>
+            <Link
+              href="/hosting"
+              className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"
+            >
+              <BiHomeAlt color="#EE3080" size={25} />
+              <p>Manage Hosting</p>
+            </Link>
+            <div
+              className="hover:bg-lightGray p-3 transition-bg flex items-center gap-3 cursor-pointer"
+              onClick={logout}
+            >
+              <IoMdLogOut color="#EE3080" size={25} />
+              <p>Logout</p>
+            </div>{" "}
+          </SheetContent>
+        </Sheet>
+      ) : (
+        <Link href="/login" className="px-7 py-2 bg-primary text-secondary rounded-[5px]">Login</Link>
+      )}
     </div>
   );
 };

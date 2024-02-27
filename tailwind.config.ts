@@ -21,8 +21,9 @@ const config = {
       colors: {
         primary: "#000000",
         secondary: "#FFFFFF",
-        pink: "EE3080",
+        pink: "#EE3080",
         lightGray: "#E5E5E5",
+        mediumGray:"#BFBFBF",
         darkGray: "#8A8A8A",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

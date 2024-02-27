@@ -2,7 +2,8 @@
 import * as React from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
+import { CiCircleMinus, CiCirclePlus, CiSearch } from "react-icons/ci";
+import { BsSearch } from "react-icons/bs";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -25,9 +26,12 @@ const SearchBar = () => {
   const [childrenNumber, setChildrenNumber] = useState(0);
   const [infantsNumber, SetInfantsNumber] = useState(0);
 
+  const handleSearch = () =>{
+
+  }
 
   return (
-    <div className=" flex items-center border border-lightGray shadow-lg w-[750px] py-1 px-4 rounded-full z-40 mt-10">
+    <div className=" flex items-center border border-lightGray shadow-lg w-[900px] py-1 px-4 rounded-full z-20 mt-10">
       <div className="w-[280px] flex flex-col justify-center">
         <p className="px-6 font-bold text-xsm">Where</p>
         <CountrySelector
@@ -49,7 +53,7 @@ const SearchBar = () => {
             <Button
               variant={"ghost"}
               className={cn(
-                "w-[180px] justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl",
+                "w-[180px] justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl ",
                 !startDate && "text-muted-foreground"
               )}
             >
@@ -57,7 +61,7 @@ const SearchBar = () => {
               {startDate ? format(startDate, "PPP") : <span>Add dates</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent className="w-auto p-0 ">
             <Calendar
               mode="single"
               selected={startDate}
@@ -148,6 +152,7 @@ const SearchBar = () => {
           </PopoverContent>
         </Popover>
       </div>
+      <BsSearch size={60} className="pr-5 cursor-pointer" color="#EE3080" onClick={handleSearch}/>
     </div>
   );
 };
