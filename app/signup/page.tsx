@@ -1,12 +1,12 @@
 "use client";
 import { supabase } from "@/lib/supabase";
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
 import { toast } from "@/components/ui/use-toast";
+import { SparklesCore } from "@/components/ui/sparkles";
 
 const page = () => {
   const [email, setEmail] = useState("");
@@ -39,12 +39,30 @@ const page = () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
-    console.log(data);
   };
 
   return (
-    <div className="flex justify-center items-cente pt-40">
-      <div className="flex flex-col justify-center items-center gap-5 border border-lightGray py-20 px-10 rounded-3xl shadow-md">
+    <div className="flex justify-center items-center w-[100vw]">
+    <div className="h-screen bg-black flex flex-col items-center justify-center overflow-hidden rounded-md w-[60vw]">
+    <h1 className=" font-bold text-center text-white relative z-20 text-xmd px-20">Join BookItNow for access to amazing stays! Sign up now to start planning your next adventure with ease.</h1>
+      <div className="w-[40rem] h-40 relative">
+        <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
+        <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
+        <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
+        <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+         <SparklesCore
+          background="transparent"
+          minSize={0.4}
+          maxSize={1}
+          particleDensity={1200}
+          className="w-full h-full"
+          particleColor="#FFFFFF"
+        />
+         <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+      </div>
+    </div>
+    <div className="border border-l border-lightGray h-screen shadow-xl"></div>
+    <div className="flex flex-col justify-center items-center gap-5  py-20 px-10  w-[50vw]">
         <p className="text-xmd font-black">Create New Account</p>
         <input
           onChange={(e) => setEmail(e.target.value)}

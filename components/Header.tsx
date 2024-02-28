@@ -18,13 +18,14 @@ import { useRouter } from "next/navigation";
 const Header = () => {
   const [session, setSession] = useState<Session | null>();
   const router = useRouter();
-  // const currentPathname = router.pathname;
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = typeof window !== "undefined" ? window.location.pathname : "";
 
+  console.log(isActive)
   useEffect(() => {
     const getSession = async () => {
       const { data, error } = await supabase.auth.getSession();
       setSession(data.session);
+     
     };
     getSession();
   },[]);
@@ -32,15 +33,16 @@ const Header = () => {
   const logout = async () => {
     const { error } = await supabase.auth.signOut({});
     if (!error) {
-      router.push("/");
+      router.replace("/");
+      window.location.reload(); 
     } else {
       console.error("Error logging out:", error.message);
     }
   };
 
   return (
-    <div className="flex fixed z-0 justify-between items-center w-screen py-5 px-20">
-      <Image src={logo} alt={"logo"} />
+    <div className="flex z-0 justify-between items-center w-screen py-5 px-20">
+      <Link href={'/'}><Image src={logo} alt={"logo"} /></Link>
       {session?.user ? (
         <Sheet>
           <SheetTrigger>
@@ -94,7 +96,9 @@ const Header = () => {
           </SheetContent>
         </Sheet>
       ) : (
-        <Link href="/login" className="px-7 py-2 bg-primary text-secondary rounded-[5px]">Login</Link>
+        isActive=='/login'
+        ||isActive=='/signup'?""
+        :<Link href="/login" className="px-7 py-2 bg-primary text-secondary rounded-[5px]">Login</Link>
       )}
     </div>
   );
