@@ -46,8 +46,6 @@
 }
 
 
-
-
 .image-slide::before {
 content: ''; /* Create a pseudo-element to serve as the overlay */
 position: absolute;

@@ -20,7 +20,6 @@ const Header = () => {
   const router = useRouter();
   const isActive = typeof window !== "undefined" ? window.location.pathname : "";
 
-  console.log(isActive)
   useEffect(() => {
     const getSession = async () => {
       const { data, error } = await supabase.auth.getSession();
@@ -41,7 +40,7 @@ const Header = () => {
   };
 
   return (
-    <div className="flex z-0 justify-between items-center w-screen py-5 px-20">
+    <div className="flex fixed z-0 justify-between items-center w-screen py-5 px-20">
       <Link href={'/'}><Image src={logo} alt={"logo"} /></Link>
       {session?.user ? (
         <Sheet>

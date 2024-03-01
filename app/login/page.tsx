@@ -28,7 +28,6 @@ const page = () => {
       console.log(data.user);
       if (data.user) {
         router.replace("/");
-    //   window.location.reload(); 
       }
       if (error) {
         toast({

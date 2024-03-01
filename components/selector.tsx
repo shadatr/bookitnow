@@ -51,7 +51,7 @@ useEffect(() => {
       <div className="mt-1 relative">
         <button
           type="button"
-          className={` ${className} relative w-full rounded-full focus:outline-none pl-3 pr-10 py-2 text-left cursor-default sm:text-sm`}
+          className={` ${className} relative w-full focus:outline-none text-left cursor-default`}
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="listbox-label"
@@ -132,7 +132,7 @@ useEffect(() => {
                     return (
                       <li
                         key={`${id}-${index}`}
-                        className="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9 flex items-center hover:bg-gray-50 transition"
+                        className="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9 flex items-center hover:bg-gray-50 bg-white transition"
                         id="listbox-option-0"
                         role="option"
                         onClick={() => {
