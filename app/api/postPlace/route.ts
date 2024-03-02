@@ -11,6 +11,7 @@ export async function POST(request: Request) {
   const data =await supabase
     .from('tb_places')
     .insert(dataReq).select()
+    
     return new Response(JSON.stringify({ message: data }), {
       status: 200,
       headers: { revalidate: dynamic },

@@ -140,6 +140,13 @@ const Page = () => {
     //   });
     //   return;
     // }
+    let base64Img:string[]=[]
+ 
+    const images =await Promise.all(selectedImage.map(async (file, index) => {
+      const base64: string = await toBase64(file as File) as string;
+      // console.log(base64);
+      base64Img.push(base64);
+  }))
     const data:PlaceType={
       placeType: place,
       neighborhood:neighborhood,
@@ -155,21 +162,13 @@ const Page = () => {
       bath_room_number:bathroomNumber,
       place_name:placeName.current?.value,
       place_description:placeDescription.current?.value,
-      price:price
+      price:price,
+      images:base64Img
     }
 
     try{
     const res=await axios.post('/api/postPlace', data)
 
-    const formData = new FormData();
-
-    formData.append('id', res.data.message.data[0].id);
- 
-    selectedImage.forEach((file, index) => {
-      formData.append(`image_${index}`, file);
-    });
-
-      axios.post('/api/postPlace/images', formData)
       toast({
             className: "rounded-[5px] p-4 text-green-600",
             description: "Your place pulished succsesfully",
@@ -497,5 +496,22 @@ const Page = () => {
     </div>
   );
 };
+
+const toBase64 = (file: File) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+
+    fileReader.readAsDataURL(file);
+
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+
+    fileReader.onerror = (error) => {
+      reject(error);
+    };
+  });
+};
+
 
 export default Page;

@@ -18,4 +18,5 @@ export type PlaceType={
     place_name?: string;
     place_description?: string;
     price: number;
+    images:string[]
 }
