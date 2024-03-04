@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { COUNTRIES } from "@/components/countries";
@@ -9,8 +9,9 @@ import { HiOutlinePlus } from "react-icons/hi2";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { toast } from "@/components/ui/use-toast";
 import { PlaceType } from "@/types";
-import axios from 'axios'
-
+import axios from "axios";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 
 const places = [
   { name: "House", icon: "/home.png" },
@@ -68,7 +69,15 @@ const Page = () => {
   const placeName = useRef<HTMLTextAreaElement>(null);
   const placeDescription = useRef<HTMLTextAreaElement>(null);
   const [price, setPrice] = useState(200);
+  const [session, setSession] = useState<Session | null>();
 
+  useEffect(() => {
+    const getSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      setSession(data.session);
+    };
+    getSession();
+  }, []);
   const handleAddPlaceAmenities = (item: string) => {
     setPlaceAmenities((prevState) => [...prevState, item]);
   };
@@ -113,74 +122,86 @@ const Page = () => {
     setSelectedImage(selectedImage.filter((pic) => pic.name !== name));
   };
 
-  const handleSave=async ()=>{
-    // if(!place){
-    //   toast({
-    //     className: "rounded-[5px] p-4 text-red-600",
-    //     description: "You should select the place type",
-    //   });
-    //   return;
-    // }else if(!(neighborhood||streetAddress||apt||postalCode||district||province||country)){
-    //   toast({
-    //     className: "rounded-[5px] p-4 text-red-600",
-    //     description: "You should fill all location fields",
-    //   });
-    //   return;
-    // }
-    // else if(selectedImage.length<3){
-    //   toast({
-    //     className: "rounded-[5px] p-4 text-red-600",
-    //     description: "You should add more than one image to your place",
-    //   });
-    //   return;
-    // }else if(!placeName){
-    //   toast({
-    //     className: "rounded-[5px] p-4 text-red-600",
-    //     description: "You should fill the name of the place",
-    //   });
-    //   return;
-    // }
-    let base64Img:string[]=[]
- 
-    const images =await Promise.all(selectedImage.map(async (file, index) => {
-      const base64: string = await toBase64(file as File) as string;
-      // console.log(base64);
-      base64Img.push(base64);
-  }))
-    const data:PlaceType={
-      placeType: place,
-      neighborhood:neighborhood,
-      streetAddress:streetAddress,
-      apt:apt,
-      postalCode:postalCode,
-      district:district,
-      province:province,
-      country:country.current?.value,
-      guest_number:guestNumber,
-      bed_room_number:bedRoomNumber,
-      bed_number:bedNumber,
-      bath_room_number:bathroomNumber,
-      place_name:placeName.current?.value,
-      place_description:placeDescription.current?.value,
-      price:price,
-      images:base64Img
+  const handleSave = async () => {
+    if (!place) {
+      toast({
+        className: "rounded-[5px] p-4 text-red-600",
+        description: "You should select the place type",
+      });
+      return;
+    } else if (
+      !(
+        province ||
+        country
+      )
+    ) {
+      toast({
+        className: "rounded-[5px] p-4 text-red-600",
+        description: "You should fill all location fields",
+      });
+      return;
+    } else if (selectedImage.length < 3) {
+      toast({
+        className: "rounded-[5px] p-4 text-red-600",
+        description: "You should add more than one image to your place",
+      });
+      return;
+    } else if (!placeName) {
+      toast({
+        className: "rounded-[5px] p-4 text-red-600",
+        description: "You should fill the name of the place",
+      });
+      return;
     }
+    let base64Img: string[] = [];
 
-    try{
-    const res=await axios.post('/api/postPlace', data)
+    await Promise.all(
+      selectedImage.map(async (file, index) => {
+        const base64: string = (await toBase64(file as File)) as string;
+        base64Img.push(base64);
+      })
+    );
+    const combinedAmenities = [
+      ...PlaceAmenities,
+      ...PlaceStandoutAmenities,
+      ...safetyItems,
+    ];
+
+    const data: PlaceType = {
+      user_id: session?.user.id,
+      placeType: place,
+      neighborhood: neighborhood,
+      streetAddress: streetAddress,
+      apt: apt,
+      postalCode: postalCode,
+      district: district,
+      province: province,
+      country: country.current?.value,
+      guest_number: guestNumber,
+      bed_room_number: bedRoomNumber,
+      bed_number: bedNumber,
+      bath_room_number: bathroomNumber,
+      amenities: combinedAmenities,
+      place_name: placeName.current?.value,
+      place_description: placeDescription.current?.value,
+      price: price,
+      images: base64Img,
+    };
+
+    try {
+      await axios.post("/api/hosting", data);
 
       toast({
-            className: "rounded-[5px] p-4 text-green-600",
-            description: "Your place pulished succsesfully",
-          });
-    }catch(err){
+        className: "rounded-[5px] p-4 text-green-600",
+        description: "Your place pulished succsesfully",
+      });
+    } catch (err) {
       toast({
         className: "rounded-[5px] p-4 text-red-600",
         description: "An error happened while pulishing your place",
       });
     }
-
-  }
+  };
 
   return (
     <div className="w-screen flex justify-center items-center flex-col py-20">
@@ -436,7 +457,7 @@ const Page = () => {
                 <img
                   src={URL.createObjectURL(pic)}
                   alt="Selected"
-                  className={`w-[340px] h-[230px] rounded-[10px] `}
+                  className={`w-[380px] h-[250px] rounded-[10px] `}
                 />
               </span>
             ))}
@@ -492,7 +513,9 @@ const Page = () => {
           />
         </span>
       </div>
-      <Button size="lg" color="danger" className="m-5" onClick={handleSave}>Save & publish</Button>
+      <Button size="lg" color="danger" className="m-5" onClick={handleSave}>
+        Save & publish
+      </Button>
     </div>
   );
 };
@@ -512,6 +535,5 @@ const toBase64 = (file: File) => {
     };
   });
 };
-
 
 export default Page;

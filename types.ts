@@ -3,6 +3,8 @@ import {COUNTRIES} from "./components/countries";
 export type SelectMenuOption = typeof COUNTRIES[number]
 
 export type PlaceType={
+    id?:number;
+    user_id?:string;
     placeType: string;
     neighborhood: string;
     streetAddress: string;
@@ -17,6 +19,7 @@ export type PlaceType={
     bath_room_number:number;
     place_name?: string;
     place_description?: string;
+    amenities:string[];
     price: number;
     images:string[]
 }
