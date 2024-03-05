@@ -21,5 +21,6 @@ export type PlaceType={
     place_description?: string;
     amenities:string[];
     price: number;
-    images:string[]
+    images:string[];
+    status:string;
 }

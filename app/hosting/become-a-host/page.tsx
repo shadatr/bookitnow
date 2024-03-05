@@ -186,6 +186,7 @@ const Page = () => {
       place_description: placeDescription.current?.value,
       price: price,
       images: base64Img,
+      status:"avalible"
     };
 
     try {
@@ -234,7 +235,7 @@ const Page = () => {
         </p>
         <Select label="Select a country/region" ref={country}>
           {COUNTRIES.map((item) => (
-            <SelectItem key={item.value} value={item.value}>
+            <SelectItem key={item.title} value={item.title}>
               {item.title}
             </SelectItem>
           ))}
