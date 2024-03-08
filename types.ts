@@ -24,3 +24,8 @@ export type PlaceType={
     images:string[];
     status:string;
 }
+
+export type reserved={
+    startDate: Date,
+    endDate:Date
+}

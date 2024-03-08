@@ -24,7 +24,7 @@ const Header = () => {
     const getSession = async () => {
       const { data, error } = await supabase.auth.getSession();
       setSession(data.session);
-     
+      console.log(data.session)
     };
     getSession();
   },[]);
@@ -91,7 +91,7 @@ const Header = () => {
             >
               <IoMdLogOut color="#EE3080" size={25} />
               <p>Logout</p>
-            </div>{" "}
+            </div>
           </SheetContent>
         </Sheet>
       ) : (

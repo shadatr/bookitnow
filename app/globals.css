@@ -57,6 +57,9 @@ background-color: rgba(7, 6, 29, 0.8); /* Black with 80% opacity */
 z-index: 5;
 }
 
+.bg-image{
+  background-color: rgba(0, 0, 0, 0.6);
+}
 
 .image-slider {
 position: relative;
@@ -111,4 +114,13 @@ animation: colorChange 1s linear forwards;
 100% {
   background-color: blue; /* Final color */
 }
+}
+
+.calendar {
+ width: screen; /* Change the background color of reserved days */
+}
+
+.calendar__dayCell-footer {
+  font-size: 14px;
+  color: lightgray; /* Change the color of the text in the DayCellFooter */
 }

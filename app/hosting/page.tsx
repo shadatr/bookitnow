@@ -9,17 +9,6 @@ import { motion } from "framer-motion";
 
 const Page = () => {
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType[]>([]);
-  const placeRef = useRef<HTMLSelectElement>(null);
-  const [place, setPlace] = useState<PlaceType>();
-  const data = [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    // ...
-  ];
 
   useEffect(() => {
     const handleUpload = async () => {
@@ -32,13 +21,6 @@ const Page = () => {
     };
     handleUpload();
   }, []);
-
-  const handlePlaceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedPlace = hostedPlaces.find(
-      (i) => i.place_name === e.target.value
-    );
-    setPlace(selectedPlace);
-  };
 
   return (
     <div className="flex flex-col justify-center items-center w-screen pt-24 ">
