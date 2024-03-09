@@ -169,6 +169,7 @@ const Page = () => {
 
     const data: PlaceType = {
       user_id: session?.user.id,
+      user_email: session?.user.email,
       placeType: place,
       neighborhood: neighborhood,
       streetAddress: streetAddress,

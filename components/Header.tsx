@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import logo from "../public/BookItNow.png";
 import Image from "next/image";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -24,7 +23,8 @@ const Header = () => {
     const getSession = async () => {
       const { data, error } = await supabase.auth.getSession();
       setSession(data.session);
-      console.log(data.session)
+      if(data.session?.user.identities&&data.session?.user.identities[1]) console.log(data.session?.user.identities[1].identity_data?.avatar_url);
+
     };
     getSession();
   },[]);
@@ -41,12 +41,12 @@ const Header = () => {
 
   return (
     <div className="flex fixed z-0 justify-between items-center w-screen py-5 px-20">
-      <Link href={'/'}><Image src={logo} alt={"logo"} /></Link>
-      {session?.user ? (
+      <Link href={'/'}><Image src={'/BookItNow.png'} width={150} height={100} alt={"logo"} /></Link>
+      {session?.user||session ? (
         <Sheet>
           <SheetTrigger>
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src={session?.user.identities&&session?.user.identities[1].identity_data?session?.user.identities[1].identity_data.avatar_url:""}/>
             </Avatar>
           </SheetTrigger>
           <SheetContent className="bg-secondary flex flex-col text-md font-bold gap-0 m-0 px-0 py-10">

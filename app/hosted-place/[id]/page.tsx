@@ -1,5 +1,5 @@
 "use client";
-import { PlaceType,reserved } from "@/types";
+import { PlaceType, reserved } from "@/types";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { HiOutlineXMark } from "react-icons/hi2";
@@ -26,8 +26,6 @@ const Amenities = [
   { name: "Carbon monoxide alarm", icon: "/carbon.png" },
 ];
 
-
-
 const Page = ({ params }: { params: { id: string } }) => {
   const [activeTab, setActiveTab] = useState<string>("Tab 1");
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType>();
@@ -36,29 +34,28 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [selectedDates, setSelectedDates] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
-
   const handleChange = (e: any) => setSelectedDates(e);
 
   useEffect(() => {
     const handleUpload = async () => {
-        const data = await axios.get(`/api/hosted_place/${params.id}`);
-        setHostedPlaces(data.data.message.data[0]);
-        const data2 = await axios.get(`/api/reserve/${params.id}`);
-        setReserved(data2.data.message.data)
+      const data = await axios.get(`/api/hosted_place/${params.id}`);
+      setHostedPlaces(data.data.message.data[0]);
+      const data2 = await axios.get(`/api/reserve/${params.id}`);
+      setReserved(data2.data.message.data);
 
-        let datares:reserved[] = []; 
-        data2.data.message.data.map((dateString: { date: string | number | Date; }) => {
-            const startDate = new Date(dateString.date);
-            const endDate = new Date(startDate);
-            startDate.setDate(startDate.getDate() - 1); // Adding one day to the start date
-            datares.push({ startDate, endDate });
-        });
-                if (datares.length > 0)
-            setReserved(datares)
+      let datares: reserved[] = [];
+      data2.data.message.data.map(
+        (dateString: { date: string | number | Date }) => {
+          const startDate = new Date(dateString.date);
+          const endDate = new Date(startDate);
+          startDate.setDate(startDate.getDate() - 1);
+          datares.push({ startDate, endDate });
+        }
+      );
+      if (datares.length > 0) setReserved(datares);
     };
     handleUpload();
-}, [refresh]);
-
+  }, [refresh]);
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
@@ -83,11 +80,9 @@ const Page = ({ params }: { params: { id: string } }) => {
       days.push(dateString);
       currentDate.setDate(currentDate.getDate() + 1);
     }
-    console.log(days);
     axios.post(`/api/removeReservation/${hostedPlaces?.id}`, days);
-    setSelectedDates([])
-    setRefresh(!refresh)
-
+    setSelectedDates([]);
+    setRefresh(!refresh);
   };
 
   const handleBlock = () => {
@@ -107,12 +102,15 @@ const Page = ({ params }: { params: { id: string } }) => {
       const parts = dateTimeString.split("T");
       const dateString = parts[0];
       days.push(dateString);
-      currentDate.setDate(currentDate.getDate()+1 );
+      currentDate.setDate(currentDate.getDate() + 1);
     }
+    const data = {
+      days: days,
+    };
 
-    axios.post(`/api/reserve/${hostedPlaces?.id}`, days);
-    setSelectedDates([])
-    setRefresh(!refresh)
+    axios.post(`/api/reserve/${hostedPlaces?.id}`, data);
+    setSelectedDates([]);
+    setRefresh(!refresh);
   };
 
   return (
@@ -262,8 +260,18 @@ const Page = ({ params }: { params: { id: string } }) => {
         {activeTab == "Tab 2" && (
           <div className="w-[1000px] flex flex-col items-center justify-center py-10">
             <div className="flex gap-5 pb-10">
-              <button onClick={handleAvailable} className="p-3 bg-pink rounded-full text-secondary font-bold">Open the nights</button>
-              <button onClick={handleBlock} className="p-3 bg-darkGray rounded-full text-secondary font-bold">Block the nights</button>
+              <button
+                onClick={handleAvailable}
+                className="p-3 bg-pink rounded-full text-secondary font-bold"
+              >
+                Open the nights
+              </button>
+              <button
+                onClick={handleBlock}
+                className="p-3 bg-darkGray rounded-full text-secondary font-bold"
+              >
+                Block the nights
+              </button>
             </div>
             <Calendar
               classNamePrefix="calendar"

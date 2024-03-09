@@ -22,8 +22,8 @@ export default function Home() {
     <div className="w-full flex flex-col items-center justify-center ">
       <SearchBar/>
       <div className="mt-10 text-[15px] grid grid-cols-4">
-        {hostedPlaces.map((item)=>
-          <Link href={`/place/${item.id}`}  className="w-[280px] ">
+        {hostedPlaces.map((item, index)=>
+          <Link href={`/place/${item.id}`}  className="w-[280px] " key={index}>
             <Image alt="image" src={item.images[0]} width={50} height={50} className="w-[280px] h-[280px] rounded-[10px]"/>
             <p className="font-bold pt-2">{item.place_name}</p>
             <p>{item.country}, {item.province}</p>

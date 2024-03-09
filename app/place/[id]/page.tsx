@@ -6,6 +6,10 @@ import Image from "next/image";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { FiPlus } from "react-icons/fi";
 import { Calendar } from "@demark-pro/react-booking-calendar";
+import { useRouter } from "next/navigation";
+import asyncStripe from "@/lib/stripe";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 
 const Amenities = [
   { name: "Wifi", icon: "/wifi.png" },
@@ -32,6 +36,8 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [reserved, setReserved] = useState<reserved[]>([]);
   const [numberOfDays, setNumberOfDays] = useState(0);
+  const [session, setSession] = useState<Session | null>();
+  const router = useRouter();
 
   const handleChange = (e: any) => {
     setSelectedDates(e);
@@ -54,13 +60,15 @@ const Page = ({ params }: { params: { id: string } }) => {
       setHostedPlace(data.data.message.data[0]);
       const data2 = await axios.get(`/api/reserve/${params.id}`);
       setReserved(data2.data.message.data);
+      const data3 = await supabase.auth.getSession();
+      setSession(data3.data.session);
 
       let datares: reserved[] = [];
       data2.data.message.data.map(
         (dateString: { date: string | number | Date }) => {
           const startDate = new Date(dateString.date);
           const endDate = new Date(startDate);
-          startDate.setDate(startDate.getDate() - 1); 
+          startDate.setDate(startDate.getDate() - 1);
           datares.push({ startDate, endDate });
         }
       );
@@ -78,9 +86,50 @@ const Page = ({ params }: { params: { id: string } }) => {
     return false;
   };
 
-  const handleReserve=()=>{
-    
-  }
+  const handleReserve = async () => {
+    const amount = hostedPlace?.price
+      ? hostedPlace?.price * numberOfDays * 0.1 +
+        hostedPlace?.price * numberOfDays
+      : 0;
+    const name = hostedPlace?.place_name;
+    const endDate: Date = selectedDates[1];
+      const startDate: Date = selectedDates[0];
+
+      const days = [];
+      let currentDate = new Date(startDate);
+
+      while (currentDate <= endDate) {
+        const dateTimeString = currentDate.toISOString();
+        const parts = dateTimeString.split("T");
+        const dateString = parts[0];
+        days.push(dateString);
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      const data = {
+        place_id:hostedPlace?.id,
+        user_id: session?.user.email,
+        days: days,
+      };
+
+    try {
+      const stripe = await asyncStripe;
+
+      const res = await axios.post("/api/payment", {
+        amount,
+        name,
+        data
+      });
+      const sessionId = await res.data.sessionId;
+      await stripe?.redirectToCheckout({ sessionId });
+
+
+      router.push("/payment/succsess");
+    } catch (err) {
+      console.log(err);
+      router.push("/payment/error");
+    }
+  };
 
   return (
     <div className="w-[100%] flex justify-center items-center">
@@ -241,7 +290,10 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </p>
               </span>
             </div>
-            <button className="bg-pink text-secondary p-3 font-bold rounded-[10px]">
+            <button
+              className="bg-pink text-secondary p-3 font-bold rounded-[10px]"
+              onClick={handleReserve}
+            >
               Reserve
             </button>
             <div className="flex justify-between font-medium">

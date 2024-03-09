@@ -32,13 +32,14 @@ const page = () => {
           emailRedirectTo: "http://localhost:3000",
         },
       });
+      console.log(data.session?.user)
     }
   };
 
   const signInWithGoogle = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+      await supabase.auth.signInWithOAuth({
       provider: "google",
-    });
+    })
   };
 
   return (

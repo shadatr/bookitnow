@@ -39,7 +39,7 @@ const page = () => {
   };
 
   const signInWithGoogle = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const data = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
   };
