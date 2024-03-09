@@ -1,11 +1,13 @@
 "use client";
-import { PlaceType, reserved } from "@/types";
+import { PlaceType, UserMessagesType, reservations, reserved } from "@/types";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { HiOutlineXMark } from "react-icons/hi2";
 import Image from "next/image";
 import { FiPlus } from "react-icons/fi";
 import Calendar from "@demark-pro/react-booking-calendar";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 
 const Amenities = [
   { name: "Wifi", icon: "/wifi.png" },
@@ -29,19 +31,67 @@ const Amenities = [
 const Page = ({ params }: { params: { id: string } }) => {
   const [activeTab, setActiveTab] = useState<string>("Tab 1");
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType>();
-  const [reserved, setReserved] = useState<reserved[]>([]);
+  const [reservedDays, setReservedDays] = useState<reserved[]>([]);
+  const [reservations, setReservations] = useState<reservations[]>([]);
   const [imagesOpened, setImagesOpened] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [emails, setEmails] = useState<string[]>([]);
+  const [selectedEmail, setSelectedEmail] = useState<string>();
+  const [msgText, setMsgText] = useState("");
+  const [session, setSession] = useState<Session | null>();
+  const [messages, setMessages] = useState<UserMessagesType[]>([]);
+
+  useEffect(() => {
+    const changes = supabase
+      .channel("table-db-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "tb_messages",
+          filter: `place_id=eq.${hostedPlaces?.id}`,
+        },
+        (payload: any) => {
+          setMessages((prevMessages: any) => {
+            if (!prevMessages) return prevMessages;
+            const updatedMessages = [...prevMessages];
+            updatedMessages.push(payload.new);
+            return updatedMessages;
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      changes.unsubscribe();
+    };
+  }, [refresh]);
 
   const handleChange = (e: any) => setSelectedDates(e);
 
   useEffect(() => {
     const handleUpload = async () => {
-      const data = await axios.get(`/api/hosted_place/${params.id}`);
-      setHostedPlaces(data.data.message.data[0]);
+      const data1 = await axios.get(`/api/hosted_place/${params.id}`);
+      setHostedPlaces(data1.data.message.data[0]);
+
+      const { data, error } = await supabase.auth.getSession();
+      setSession(data.session);
+
       const data2 = await axios.get(`/api/reserve/${params.id}`);
-      setReserved(data2.data.message.data);
+      const res: reservations[] = data2.data.message.data;
+      setReservations(res);
+
+      const res2 = await axios.get(
+        `/api/messages/${data1.data.message.data[0]?.id}`
+      );
+      const data3: UserMessagesType[] = res2.data.message.data;
+      setMessages(data3);
+
+      const uniqueEmails = new Set(res.map((item) => item.user_email));
+      const uniqueEmailsArray = [...uniqueEmails];
+      setEmails(uniqueEmailsArray);
 
       let datares: reserved[] = [];
       data2.data.message.data.map(
@@ -52,14 +102,10 @@ const Page = ({ params }: { params: { id: string } }) => {
           datares.push({ startDate, endDate });
         }
       );
-      if (datares.length > 0) setReserved(datares);
+      if (datares.length > 0) setReservedDays(datares);
     };
     handleUpload();
   }, [refresh]);
-
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
-  };
 
   const handleAvailable = () => {
     if (selectedDates.length < 2) {
@@ -111,6 +157,25 @@ const Page = ({ params }: { params: { id: string } }) => {
     axios.post(`/api/reserve/${hostedPlaces?.id}`, data);
     setSelectedDates([]);
     setRefresh(!refresh);
+  };
+
+  const handelSend = () => {
+    if (!msgText) {
+      return;
+    }
+    const data = {
+      place_id: hostedPlaces?.id,
+      text: msgText,
+      sender_id: session?.user.email,
+      reciever_id: selectedEmail,
+    };
+    axios.post("/api/messages/1", data);
+    setMsgText("");
+    setRefresh(!refresh);
+  };
+
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
   };
 
   return (
@@ -172,9 +237,9 @@ const Page = ({ params }: { params: { id: string } }) => {
                 />
                 <div className="grid grid-cols-2 gap-1">
                   {hostedPlaces.images.slice(0, 4).map((pic, index) => (
-                    <span>
+                    <span key={index}>
                       {index == 3 && hostedPlaces?.images.length > 5 ? (
-                        <p className="absolute items-center justify-center w-[280px] h-[175px] p-2 bg-image">
+                        <span className="absolute items-center justify-center w-[280px] h-[175px] p-2 bg-image">
                           <p
                             className="hover:cursor-pointer flex items-center justify-center w-full h-full text-secondary"
                             onClick={() => setImagesOpened(true)}
@@ -184,7 +249,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                               size={40}
                             />
                           </p>
-                        </p>
+                        </span>
                       ) : (
                         ""
                       )}
@@ -210,7 +275,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 />
                 <div className="w-full flex flex-col gap-4 items-center justify-center">
                   {hostedPlaces?.images.map((pic, index) => (
-                    <span>
+                    <span key={index}>
                       <Image
                         onClick={() => setImagesOpened(true)}
                         width={300}
@@ -239,10 +304,10 @@ const Page = ({ params }: { params: { id: string } }) => {
             <span className="grid gap-5">
               <p className="text-md font-bold">What this place offers</p>
               <div className="grid grid-cols-2 gap-10 w-[600px]">
-                {hostedPlaces?.amenities.map((item) => {
+                {hostedPlaces?.amenities.map((item, index) => {
                   const amt = Amenities.find((i) => i.name == item);
                   return (
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center gap-2" key={index}>
                       <Image
                         src={amt?.icon || ""}
                         alt={amt?.name || ""}
@@ -283,14 +348,14 @@ const Page = ({ params }: { params: { id: string } }) => {
                   <div
                     {...innerProps}
                     className={`calendar__dayCell-footer ${
-                      reserved.some(
+                      reservedDays.some(
                         (reservation) =>
                           date >= reservation.startDate &&
                           date <= reservation.endDate
                       ) && "booked"
                     }`}
                   >
-                    {reserved.some(
+                    {reservedDays.some(
                       (reservation) =>
                         date >= reservation.startDate &&
                         date <= reservation.endDate
@@ -300,11 +365,110 @@ const Page = ({ params }: { params: { id: string } }) => {
                   </div>
                 ),
               }}
-              reserved={reserved}
+              reserved={reservedDays}
               variant="events"
               dateFnsOptions={{ weekStartsOn: 1 }}
               range={true}
             />
+          </div>
+        )}
+        {activeTab == "Tab 3" && (
+          <div>
+            <table className="w-[1200px] border-collapse border border-gray-200 rounded-[10px]">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="p-3 text-left">NAME</th>
+                  <th className="p-3 text-left">DATE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reservations.length ? (
+                  reservations.map((item, index) => (
+                    <tr
+                      className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                      key={index}
+                    >
+                      <td className="p-3">{item.user_email}</td>
+                      <td className="p-3">{item.date}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr className="p-3 w-full items-center justify-center">
+                    <td colSpan={7} className="p-3">
+                      You don't have any reservations yet!
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {activeTab === "Tab 4" && (
+          <div className="flex w-[1000px] h-[600px] shadow-large rounded-large">
+            <div className="flex flex-col w-[40%] h-full bg-lightGray overflow-y-auto">
+              {emails.map((item, index) => (
+                <span
+                  key={index}
+                  onClick={() => setSelectedEmail(item)}
+                  className={`transition-bg p-4 rounded-large ${
+                    selectedEmail === item &&
+                    "bg-secondary font-bold border border-darkGray"
+                  }`}
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-col w-[60%] h-full overflow-y-auto">
+                {messages ? (
+                  <div className="flex flex-col h-[500px] overflow-y-auto p-5">
+                    {messages.filter((i)=> i.reciever_id==selectedEmail)
+                      .sort((a, b) => a.id - b.id)
+                      .map((msg) => (
+                        <div
+                          key={msg.id}
+                          className={`flex p-2 w-full rounded-md ${
+                            msg.sender_id === session?.user?.email
+                              ? "justify-end"
+                              : "justify-start"
+                          }`}
+                        >
+                          <div className="flex flex-row items-center">
+                            <span
+                              className={`py-2 px-4 rounded-large mx-2 ${
+                                msg.sender_id === session?.user?.email
+                                  ? "bg-secondary border"
+                                  : "bg-lightGray"
+                              }`}
+                            >
+                              {msg.text}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                ) : (
+                  <div className="flex h-[600px] justify-center items-center font-bold">
+                    no messages
+                  </div>
+                )}
+                <div className="flex items-center">
+                  <span className="w-full rounded-[20px] lg:p-5 sm:p-3">
+                    <textarea
+                      className="w-full outline-none lg:h-[20px] sm:h-[20px]"
+                      placeholder="write your message here..."
+                      value={msgText}
+                      onChange={(e) => setMsgText(e.target.value)}
+                    />
+                  </span>
+                  <span
+                    className="bg-blue1 rounded-[20px] lg:py-4 lg:px-6 sm:py-2 sm:px-3 font-bold cursor-pointer"
+                    onClick={handelSend}
+                  >
+                    Send
+                  </span>
+                </div>
+            </div>
           </div>
         )}
       </div>

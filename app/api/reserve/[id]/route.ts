@@ -42,7 +42,7 @@ export async function GET(
       const data = await supabase
         .from("tb_reservations")
         .select("*")
-        .eq("place_id", params.id);
+        .eq("place_id", params.id).order('id', { ascending: true });
   
       return new Response(JSON.stringify({ message: data }), {
         status: 200,

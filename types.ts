@@ -26,7 +26,23 @@ export type PlaceType={
     status:string;
 }
 
+export type reservations={
+    id:number,
+    user_email:string,
+    user_id: string,
+    date:string
+}
+
 export type reserved={
     startDate: Date,
     endDate:Date
 }
+
+export type UserMessagesType = {
+    id:number;
+    place_id: number;
+    reciever_id:string ;
+    sender_id:string;
+    text:string
+  };
+  
