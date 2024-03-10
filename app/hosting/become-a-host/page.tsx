@@ -78,6 +78,7 @@ const Page = () => {
     };
     getSession();
   }, []);
+  
   const handleAddPlaceAmenities = (item: string) => {
     setPlaceAmenities((prevState) => [...prevState, item]);
   };

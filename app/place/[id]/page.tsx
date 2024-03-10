@@ -1,5 +1,5 @@
 "use client";
-import { PlaceType, ReservedType } from "@/types";
+import { FavoritesType, PlaceType, ReservedType } from "@/types";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import asyncStripe from "@/lib/stripe";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { FaHeart } from "react-icons/fa";
+import { toast } from "@/components/ui/use-toast";
 
 const Amenities = [
   { name: "Wifi", icon: "/wifi.png" },
@@ -35,8 +37,11 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [imagesOpened, setImagesOpened] = useState(false);
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [reserved, setReserved] = useState<ReservedType[]>([]);
+  const [favorites, setFavorites] = useState<FavoritesType[]>([]);
   const [numberOfDays, setNumberOfDays] = useState(0);
   const [session, setSession] = useState<Session | null>();
+  const [refresh, setRefresh] = useState(false);
+
   const router = useRouter();
 
   const handleChange = (e: any) => {
@@ -62,6 +67,8 @@ const Page = ({ params }: { params: { id: string } }) => {
       setReserved(data2.data.message.data);
       const data3 = await supabase.auth.getSession();
       setSession(data3.data.session);
+      const data4 = await axios.get(`/api/favorites/${data3.data.session?.user.id}`);
+      setFavorites(data4.data.message.data);
 
       let datares: ReservedType[] = [];
       data2.data.message.data.map(
@@ -75,7 +82,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       if (datares.length > 0) setReserved(datares);
     };
     handleUpload();
-  }, []);
+  }, [refresh]);
 
   const isReserved = (date: Date) => {
     for (let i = 0; i < reserved.length; i++) {
@@ -124,7 +131,6 @@ const Page = ({ params }: { params: { id: string } }) => {
       const sessionId = await res.data.sessionId;
       await stripe?.redirectToCheckout({ sessionId });
 
-
       router.push("/payment/succsess");
     } catch (err) {
       console.log(err);
@@ -137,13 +143,19 @@ const Page = ({ params }: { params: { id: string } }) => {
       user_id:session?.user.id,
       place_id:hostedPlace?.id
     }
-    axios.post("/api/addToFavotites")
+    axios.post("/api/favorites/1",data).then((res)=>
+    toast({
+      className: "rounded-[5px] p-4 text-green-600",
+      description:  res.data.message
+    })
+    )
+    setRefresh(!refresh)
   }
 
   return (
     <div className="w-[100%] flex justify-center items-center">
       <div className="flex flex-col gap-5 py-40 w-[1100px]">
-        <button onClick={handleAddToFavorites}>Add to favorites</button>
+        <button className="flex justify-end items-center" onClick={handleAddToFavorites}><FaHeart className={favorites.find((i)=>i.place_id==hostedPlace?.id)?"text-pink":""}/> Add to favorites</button>
         {hostedPlace?.images && (
           <div className="flex gap-1">
             <Image
@@ -156,9 +168,9 @@ const Page = ({ params }: { params: { id: string } }) => {
             />
             <div className="grid grid-cols-2 gap-1">
               {hostedPlace.images.slice(0, 4).map((pic, index) => (
-                <span>
+                <span key={index}>
                   {index == 3 && hostedPlace?.images.length > 5 ? (
-                    <p className="absolute items-center justify-center w-[280px] h-[175px] p-2 bg-image">
+                    <span className="absolute items-center justify-center w-[280px] h-[175px] p-2 bg-image">
                       <p
                         className="hover:cursor-pointer flex items-center justify-center w-full h-full text-secondary"
                         onClick={() => setImagesOpened(true)}
@@ -168,7 +180,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                           size={40}
                         />
                       </p>
-                    </p>
+                    </span>
                   ) : (
                     ""
                   )}
@@ -194,7 +206,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             />
             <div className="w-full flex flex-col gap-4 items-center justify-center">
               {hostedPlace?.images.map((pic, index) => (
-                <span>
+                <span key={index}>
                   <Image
                     onClick={() => setImagesOpened(true)}
                     width={300}
@@ -224,10 +236,10 @@ const Page = ({ params }: { params: { id: string } }) => {
             <span className="grid gap-5">
               <p className="text-md font-bold">What this place offers</p>
               <div className="grid grid-cols-2 gap-10 w-[600px]">
-                {hostedPlace?.amenities.map((item) => {
+                {hostedPlace?.amenities.map((item,index) => {
                   const amt = Amenities.find((i) => i.name == item);
                   return (
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center gap-2" key={index}>
                       <Image
                         src={amt?.icon || ""}
                         alt={amt?.name || ""}

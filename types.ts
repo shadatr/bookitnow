@@ -53,3 +53,9 @@ export type UserMessagesDetailsType = {
   messages: UserMessagesType[];
   reservations: ReservationsType[];
 };
+
+export type FavoritesType={
+  id:number,
+  user_id:string,
+  place_id:number
+}
