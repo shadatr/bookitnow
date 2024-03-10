@@ -1,5 +1,10 @@
 "use client";
-import { PlaceType, UserMessagesType, reservations, reserved } from "@/types";
+import {
+  PlaceType,
+  UserMessagesType,
+  ReservationsType,
+  ReservedType,
+} from "@/types";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { HiOutlineXMark } from "react-icons/hi2";
@@ -31,8 +36,8 @@ const Amenities = [
 const Page = ({ params }: { params: { id: string } }) => {
   const [activeTab, setActiveTab] = useState<string>("Tab 1");
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType>();
-  const [reservedDays, setReservedDays] = useState<reserved[]>([]);
-  const [reservations, setReservations] = useState<reservations[]>([]);
+  const [reservedDays, setReservedDays] = useState<ReservedType[]>([]);
+  const [reservations, setReservations] = useState<ReservationsType[]>([]);
   const [imagesOpened, setImagesOpened] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -80,7 +85,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       setSession(data.session);
 
       const data2 = await axios.get(`/api/reserve/${params.id}`);
-      const res: reservations[] = data2.data.message.data;
+      const res: ReservationsType[] = data2.data.message.data;
       setReservations(res);
 
       const res2 = await axios.get(
@@ -93,7 +98,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       const uniqueEmailsArray = [...uniqueEmails];
       setEmails(uniqueEmailsArray);
 
-      let datares: reserved[] = [];
+      let datares: ReservedType[] = [];
       data2.data.message.data.map(
         (dateString: { date: string | number | Date }) => {
           const startDate = new Date(dateString.date);
@@ -420,38 +425,44 @@ const Page = ({ params }: { params: { id: string } }) => {
               ))}
             </div>
             <div className="flex flex-col w-[60%] h-full overflow-y-auto">
-                {messages ? (
-                  <div className="flex flex-col h-[500px] overflow-y-auto p-5">
-                    {messages.filter((i)=> i.reciever_id==selectedEmail)
-                      .sort((a, b) => a.id - b.id)
-                      .map((msg) => (
-                        <div
-                          key={msg.id}
-                          className={`flex p-2 w-full rounded-md ${
-                            msg.sender_id === session?.user?.email
-                              ? "justify-end"
-                              : "justify-start"
-                          }`}
-                        >
-                          <div className="flex flex-row items-center">
-                            <span
-                              className={`py-2 px-4 rounded-large mx-2 ${
-                                msg.sender_id === session?.user?.email
-                                  ? "bg-secondary border"
-                                  : "bg-lightGray"
-                              }`}
-                            >
-                              {msg.text}
-                            </span>
-                          </div>
+              {messages ? (
+                <div className="flex flex-col h-[500px] overflow-y-auto p-5">
+                  {messages
+                    .filter(
+                      (i) =>
+                        i.reciever_id == selectedEmail ||
+                        i.reciever_id == session?.user.email
+                    )
+                    .sort((a, b) => a.id - b.id)
+                    .map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`flex p-2 w-full rounded-md ${
+                          msg.sender_id === session?.user?.email
+                            ? "justify-end"
+                            : "justify-start"
+                        }`}
+                      >
+                        <div className="flex flex-row items-center">
+                          <span
+                            className={`py-2 px-4 rounded-large mx-2 ${
+                              msg.sender_id === session?.user?.email
+                                ? "bg-secondary border"
+                                : "bg-lightGray"
+                            }`}
+                          >
+                            {msg.text}
+                          </span>
                         </div>
-                      ))}
-                  </div>
-                ) : (
-                  <div className="flex h-[600px] justify-center items-center font-bold">
-                    no messages
-                  </div>
-                )}
+                      </div>
+                    ))}
+                </div>
+              ) : (
+                <div className="flex h-[600px] justify-center items-center font-bold">
+                  no messages
+                </div>
+              )}
+              {selectedEmail && (
                 <div className="flex items-center">
                   <span className="w-full rounded-[20px] lg:p-5 sm:p-3">
                     <textarea
@@ -468,6 +479,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                     Send
                   </span>
                 </div>
+              )}
             </div>
           </div>
         )}

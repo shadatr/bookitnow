@@ -1,5 +1,5 @@
 "use client";
-import { PlaceType, reserved } from "@/types";
+import { PlaceType, ReservedType } from "@/types";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -34,7 +34,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [hostedPlace, setHostedPlace] = useState<PlaceType>();
   const [imagesOpened, setImagesOpened] = useState(false);
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
-  const [reserved, setReserved] = useState<reserved[]>([]);
+  const [reserved, setReserved] = useState<ReservedType[]>([]);
   const [numberOfDays, setNumberOfDays] = useState(0);
   const [session, setSession] = useState<Session | null>();
   const router = useRouter();
@@ -63,7 +63,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       const data3 = await supabase.auth.getSession();
       setSession(data3.data.session);
 
-      let datares: reserved[] = [];
+      let datares: ReservedType[] = [];
       data2.data.message.data.map(
         (dateString: { date: string | number | Date }) => {
           const startDate = new Date(dateString.date);
@@ -108,7 +108,8 @@ const Page = ({ params }: { params: { id: string } }) => {
 
       const data = {
         place_id:hostedPlace?.id,
-        user_id: session?.user.email,
+        user_id: session?.user.id,
+        user_email: session?.user.email,
         days: days,
       };
 
@@ -131,9 +132,18 @@ const Page = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  const handleAddToFavorites = () =>{
+    const data={
+      user_id:session?.user.id,
+      place_id:hostedPlace?.id
+    }
+    axios.post("/api/addToFavotites")
+  }
+
   return (
     <div className="w-[100%] flex justify-center items-center">
       <div className="flex flex-col gap-5 py-40 w-[1100px]">
+        <button onClick={handleAddToFavorites}>Add to favorites</button>
         {hostedPlace?.images && (
           <div className="flex gap-1">
             <Image
