@@ -298,10 +298,10 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </div>
               </span>
               <div className=" border-b w-full border-lightGra py-5" />
-
-              <div className="w-[500px]">
+                  {!imagesOpened&&
+              <div className="w-[500px] z-10">
                 <Calendar
-                  classNamePrefix="calendar"
+                  classNamePrefix="calendar z-10"
                   selected={selectedDates}
                   onChange={handleChange}
                   onOverbook={(e, err) => alert(err)}
@@ -336,6 +336,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                   range={true}
                 />
               </div>
+                  }
             </div>
             <div className="border border-lightGray rounded-2xl shadow-lg p-8 flex flex-col gap-3 h-[400px]">
               <p className="font-bold text-md">{hostedPlace?.price} $ night</p>
