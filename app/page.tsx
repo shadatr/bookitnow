@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 import { Checkbox } from "@/components/ui/checkbox";
-import { dotWave } from "ldrs";
+// import { dotWave } from "ldrs";
 
 const places = [
   { name: "House", icon: "/home.png" },
@@ -102,7 +102,7 @@ export default function Home() {
       setPlaceAmenities((prevState) => prevState.filter((_, i) => i !== index));
     }
   };
-  dotWave.register();
+  // dotWave.register();
 
   return (
     <div className="w-full flex flex-col items-center justify-center ">
@@ -273,7 +273,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="h-[80vh] flex items-center justify-center">
-          <l-dot-wave size="100" speed="1.25" color="#EE3080"></l-dot-wave>
+          {/* <l-dot-wave size="100" speed="1.25" color="#EE3080"></l-dot-wave> */}
         </div>
       )}
     </div>
