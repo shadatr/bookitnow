@@ -154,8 +154,13 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="w-[100%] flex justify-center items-center">
-      <div className="flex flex-col gap-5 py-40 w-[1100px]">
-        <button className="flex justify-end items-center" onClick={handleAddToFavorites}><FaHeart className={favorites.find((i)=>i.place_id==hostedPlace?.id)?"text-pink":""}/> Add to favorites</button>
+      <div className="flex flex-col gap-5 py-10 w-[1100px]">
+        <div className="flex justify-between items-center" >
+        <span className=" text-xmd font-bold">
+            {hostedPlace?.place_name}
+          </span>
+        <button onClick={handleAddToFavorites} className="flex items-center"><FaHeart className={favorites.find((i)=>i.place_id==hostedPlace?.id)?"text-pink":""}/> Add to favorites</button>
+        </div>
         {hostedPlace?.images && (
           <div className="flex gap-1">
             <Image
@@ -213,7 +218,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                     height={180}
                     src={pic}
                     alt="Selected"
-                    className={`w-[1000px] h-[650px] `}
+                    className={`w-[1000px] h-auto `}
                   />
                 </span>
               ))}
@@ -221,8 +226,8 @@ const Page = ({ params }: { params: { id: string } }) => {
           </div>
         )}
         <div className="flex flex-col">
-          <span className=" text-xmd font-bold">
-            {hostedPlace?.place_name}, {hostedPlace?.country}
+          <span className=" text-md font-bold">
+            {hostedPlace?.country} , {hostedPlace?.province}
           </span>
           <span className="text-darkGray">
             {hostedPlace?.guest_number} guests • {hostedPlace?.bed_room_number}{" "}
@@ -230,7 +235,12 @@ const Page = ({ params }: { params: { id: string } }) => {
             {hostedPlace?.bath_room_number} baths
           </span>
         </div>
+        <div className=" border-b w-full border-lightGray"/>
+        <p className="py-5 text-md font-medium">Hosted by {hostedPlace?.user_email}</p>
+        <div className=" border-b w-full border-lightGray"/>
         <span className="w-[700px] flex">{hostedPlace?.place_description}</span>
+        <div className=" border-b w-full border-lightGray"/>
+
         <div className="flex justify-between w-full">
           <div>
             <span className="grid gap-5">
@@ -252,6 +262,8 @@ const Page = ({ params }: { params: { id: string } }) => {
                 })}
               </div>
             </span>
+            <div className=" border-b w-full border-lightGra py-5"/>
+
             <div className="w-[500px]">
               <Calendar
                 classNamePrefix="calendar"

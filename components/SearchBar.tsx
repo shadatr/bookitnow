@@ -2,7 +2,7 @@
 import * as React from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { CiCircleMinus, CiCirclePlus, CiSearch } from "react-icons/ci";
+import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 import { BsSearch } from "react-icons/bs";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { COUNTRIES } from "./countries";
 import CountrySelector from "./selector";
 import { SelectMenuOption } from "@/types";
@@ -25,13 +25,29 @@ const SearchBar = () => {
   const [adultNumber, setAdultNumber] = useState(0);
   const [childrenNumber, setChildrenNumber] = useState(0);
   const [infantsNumber, SetInfantsNumber] = useState(0);
+  const [scroll, setScroll] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 100) {
+        setScroll(true);
+      } else {
+        setScroll(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleSearch = () =>{
 
   }
 
   return (
-    <div className=" flex items-center border border-lightGray shadow-lg w-[900px] py-1 px-4 rounded-full z-20 mt-10">
+    <div className={` flex items-center border border-lightGray shadow-lg w-[1000px] py-1 px-4 rounded-full z-20 mt-3 text-xsm ${scroll?"fixed top-0":""}`}>
       <div className="w-[280px] flex flex-col justify-center">
         <p className="px-6 font-bold text-xsm">Where</p>
         <CountrySelector
@@ -53,7 +69,7 @@ const SearchBar = () => {
             <Button
               variant={"ghost"}
               className={cn(
-                "w-[180px] justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl ",
+                "w-[180px] text-[13px] justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl ",
                 !startDate && "text-muted-foreground"
               )}
             >
@@ -61,7 +77,7 @@ const SearchBar = () => {
               {startDate ? format(startDate, "PPP") : <span>Add dates</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 ">
+          <PopoverContent className="w-auto p-0 bg-secondary">
             <Calendar
               mode="single"
               selected={startDate}
@@ -71,14 +87,14 @@ const SearchBar = () => {
           </PopoverContent>
         </Popover>
       </div>
-      <div className="w-[280px] flex flex-col justify-">
+      <div className="w-[280px] flex flex-col">
         <p className="px-6 font-bold text-xsm">Check Out</p>
         <Popover>
           <PopoverTrigger asChild>
             <Button
               variant={"ghost"}
               className={cn(
-                "w-[180px] justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl",
+                "w-[180px] text-[13px] justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl",
                 !endDate && "text-muted-foreground"
               )}
             >
@@ -86,7 +102,7 @@ const SearchBar = () => {
               {endDate ? format(endDate, "PPP") : <span>Add dates</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent className="w-auto p-0 bg-secondary ">
             <Calendar
               mode="single"
               selected={endDate}
@@ -103,13 +119,13 @@ const SearchBar = () => {
           <Button
               variant={"ghost"}
               className={cn(
-                "w-[180px] justify-start text-left font-normal hover:bg-lightGray transtion-bg px-6 rounded-xl ",
+                "w-[180px] justify-start text-left font-normal hover:bg-lightGray transtion-bg px-6 rounded-xl text-[13px]",
               )}
             >
             {adultNumber+childrenNumber+infantsNumber?adultNumber+childrenNumber+infantsNumber:"Add Guests"}
             </Button>
             </PopoverTrigger>
-          <PopoverContent className={cn("rounded-3xl")}>
+          <PopoverContent className={cn("rounded-3xl bg-secondary")}>
             <div className="flex items-center justify-between border-b border-lightGray p-2">
             <span>
               <p className="font-bold">Adult</p>

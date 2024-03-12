@@ -18,6 +18,7 @@ const Header = () => {
   const [session, setSession] = useState<Session | null>();
   const router = useRouter();
   const isActive = typeof window !== "undefined" ? window.location.pathname : "";
+  const [scroll, setScroll] = useState(false);
 
   useEffect(() => {
     const getSession = async () => {
@@ -27,6 +28,20 @@ const Header = () => {
 
     };
     getSession();
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 50) {
+        setScroll(true);
+      } else {
+        setScroll(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   },[]);
 
   const logout = async () => {
@@ -40,8 +55,8 @@ const Header = () => {
   };
 
   return (
-    <div className="flex fixed z-0 justify-between items-center w-screen py-5 px-20">
-      <Link href={'/'}><Image src={'/BookItNow.png'} width={150} height={100} alt={"logo"} /></Link>
+    <div className={`flex z-0 justify-between items-center w-screen pt-5 px-60 ${scroll?"bg-secondary":""}`}>
+      <Link href={'/'}><Image src={'/BookItNow.png'} width={100} height={100} alt={"logo"} /></Link>
       {session?.user||session ? (
         <Sheet>
           <SheetTrigger>
@@ -57,13 +72,7 @@ const Header = () => {
               <LuMessageSquare color="#EE3080" size={25} />
               <p>Messages</p>
             </Link>
-            <Link
-              href="/notifications"
-              className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"
-            >
-              <RiNotification4Line color="#EE3080" size={25} />
-              <p>Notifications</p>
-            </Link>
+            
             <Link
               href="/trips"
               className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"

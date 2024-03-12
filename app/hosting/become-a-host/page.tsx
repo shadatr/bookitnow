@@ -105,7 +105,7 @@ const Page = () => {
     setSafetyItems((prevState) => [...prevState, item]);
   };
   const handleRemoveSafetyItems = (item: string) => {
-    const index = PlaceStandoutAmenities.indexOf(item);
+    const index = safetyItems.indexOf(item);
     if (index !== -1) {
       setSafetyItems((prevState) => prevState.filter((_, i) => i !== index));
     }
@@ -460,7 +460,7 @@ const Page = () => {
                 <img
                   src={URL.createObjectURL(pic)}
                   alt="Selected"
-                  className={`w-[380px] h-[250px] rounded-[10px] `}
+                  className={`w-[380px] h-[300px] rounded-[10px] `}
                 />
               </span>
             ))}
