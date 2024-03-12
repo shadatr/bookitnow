@@ -3,13 +3,18 @@ import { supabase } from '@/lib/supabase';
 import { PlaceType, ReservationsType } from '@/types';
 import axios from 'axios';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
-const Page = () => {
+const Page = async () => {
     const [trips, setTrips] = useState<ReservationsType[]>([]);
     const [places, setPlaces] = useState<PlaceType[]>([]);
     const [uniquePlaces, setUniquePlaces] = useState<number[]>([]);
 
+    const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    redirect('/')
+  }
   useEffect(() => {
     const handleUpload = async () => {
       const session = await supabase.auth.getSession();

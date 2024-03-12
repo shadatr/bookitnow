@@ -30,7 +30,7 @@ const Header = () => {
     getSession();
     const handleScroll = () => {
       const offset = window.scrollY;
-      if (offset > 50) {
+      if (offset > 30) {
         setScroll(true);
       } else {
         setScroll(false);
@@ -55,13 +55,13 @@ const Header = () => {
   };
 
   return (
-    <div className={`flex z-0 justify-between items-center w-screen pt-5 px-60 ${scroll?"bg-secondary":""}`}>
+    <div className={` flex z-0 justify-between items-center w-screen pt-5 px-60 ${scroll?"bg-secondary":""}`}>
       <Link href={'/'}><Image src={'/BookItNow.png'} width={100} height={100} alt={"logo"} /></Link>
       {session?.user||session ? (
         <Sheet>
           <SheetTrigger>
             <Avatar>
-              <AvatarImage src={session?.user.identities&&session?.user.identities[1].identity_data?session?.user.identities[1].identity_data.avatar_url:""}/>
+              <AvatarImage src={session?.user.identities&&session?.user.identities[1]?.identity_data?session?.user.identities[1].identity_data.avatar_url:"https://github.com/shadcn.png" }/>
             </Avatar>
           </SheetTrigger>
           <SheetContent className="bg-secondary flex flex-col text-md font-bold gap-0 m-0 px-0 py-10">

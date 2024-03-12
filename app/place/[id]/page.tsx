@@ -6,12 +6,13 @@ import Image from "next/image";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { FiPlus } from "react-icons/fi";
 import { Calendar } from "@demark-pro/react-booking-calendar";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import asyncStripe from "@/lib/stripe";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import { FaHeart } from "react-icons/fa";
 import { toast } from "@/components/ui/use-toast";
+import { dotWave } from 'ldrs'
 
 const Amenities = [
   { name: "Wifi", icon: "/wifi.png" },
@@ -41,7 +42,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [numberOfDays, setNumberOfDays] = useState(0);
   const [session, setSession] = useState<Session | null>();
   const [refresh, setRefresh] = useState(false);
-
+const [loaded, setLoaded]= useState(false)
   const router = useRouter();
 
   const handleChange = (e: any) => {
@@ -49,15 +50,17 @@ const Page = ({ params }: { params: { id: string } }) => {
 
     const endDate = new Date(e[1]);
     const startDate = new Date(e[0]);
+    if (e[1]) {
+      const startTimeStamp = startDate.getTime();
+      const endTimeStamp = endDate.getTime();
 
-    const startTimeStamp = startDate.getTime();
-    const endTimeStamp = endDate.getTime();
+      const timeDifference = Math.abs(endTimeStamp - startTimeStamp);
 
-    const timeDifference = Math.abs(endTimeStamp - startTimeStamp);
-
-    const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
-    setNumberOfDays(daysDifference);
+      const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+      setNumberOfDays(daysDifference);
+    }
   };
+
 
   useEffect(() => {
     const handleUpload = async () => {
@@ -67,7 +70,9 @@ const Page = ({ params }: { params: { id: string } }) => {
       setReserved(data2.data.message.data);
       const data3 = await supabase.auth.getSession();
       setSession(data3.data.session);
-      const data4 = await axios.get(`/api/favorites/${data3.data.session?.user.id}`);
+      const data4 = await axios.get(
+        `/api/favorites/${data3.data.session?.user.id}`
+      );
       setFavorites(data4.data.message.data);
 
       let datares: ReservedType[] = [];
@@ -80,6 +85,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         }
       );
       if (datares.length > 0) setReserved(datares);
+      setLoaded(true)
     };
     handleUpload();
   }, [refresh]);
@@ -94,31 +100,36 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   const handleReserve = async () => {
+    const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    redirect('/')
+  }
+    if(selectedDates.length==2){
     const amount = hostedPlace?.price
       ? hostedPlace?.price * numberOfDays * 0.1 +
         hostedPlace?.price * numberOfDays
       : 0;
     const name = hostedPlace?.place_name;
     const endDate: Date = selectedDates[1];
-      const startDate: Date = selectedDates[0];
+    const startDate: Date = selectedDates[0];
 
-      const days = [];
-      let currentDate = new Date(startDate);
+    const days = [];
+    let currentDate = new Date(startDate);
 
-      while (currentDate <= endDate) {
-        const dateTimeString = currentDate.toISOString();
-        const parts = dateTimeString.split("T");
-        const dateString = parts[0];
-        days.push(dateString);
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
+    while (currentDate <= endDate) {
+      const dateTimeString = currentDate.toISOString();
+      const parts = dateTimeString.split("T");
+      const dateString = parts[0];
+      days.push(dateString);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
 
-      const data = {
-        place_id:hostedPlace?.id,
-        user_id: session?.user.id,
-        user_email: session?.user.email,
-        days: days,
-      };
+    const data = {
+      place_id: hostedPlace?.id,
+      user_id: session?.user.id,
+      user_email: session?.user.email,
+      days: days,
+    };
 
     try {
       const stripe = await asyncStripe;
@@ -126,7 +137,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       const res = await axios.post("/api/payment", {
         amount,
         name,
-        data
+        data,
       });
       const sessionId = await res.data.sessionId;
       await stripe?.redirectToCheckout({ sessionId });
@@ -135,31 +146,46 @@ const Page = ({ params }: { params: { id: string } }) => {
     } catch (err) {
       console.log(err);
       router.push("/payment/error");
+    }}else{
+      toast({
+        className: "rounded-[5px] p-4 text-red-600",
+        description: "You should select the reservesions dates",
+      });
     }
   };
 
-  const handleAddToFavorites = () =>{
-    const data={
-      user_id:session?.user.id,
-      place_id:hostedPlace?.id
-    }
-    axios.post("/api/favorites/1",data).then((res)=>
-    toast({
-      className: "rounded-[5px] p-4 text-green-600",
-      description:  res.data.message
-    })
-    )
-    setRefresh(!refresh)
-  }
+  const handleAddToFavorites = () => {
+    const data = {
+      user_id: session?.user.id,
+      place_id: hostedPlace?.id,
+    };
+    axios.post("/api/favorites/1", data).then((res) =>
+      toast({
+        className: "rounded-[5px] p-4 text-green-600",
+        description: res.data.message,
+      })
+    );
+    setRefresh(!refresh);
+  };
+
+  dotWave.register()
 
   return (
     <div className="w-[100%] flex justify-center items-center">
+      {loaded?
       <div className="flex flex-col gap-5 py-10 w-[1100px]">
-        <div className="flex justify-between items-center" >
-        <span className=" text-xmd font-bold">
-            {hostedPlace?.place_name}
-          </span>
-        <button onClick={handleAddToFavorites} className="flex items-center"><FaHeart className={favorites.find((i)=>i.place_id==hostedPlace?.id)?"text-pink":""}/> Add to favorites</button>
+        <div className="flex justify-between items-center">
+          <span className=" text-xmd font-bold">{hostedPlace?.place_name}</span>
+          <button onClick={handleAddToFavorites} className="flex items-center">
+            <FaHeart
+              className={
+                favorites.find((i) => i.place_id == hostedPlace?.id)
+                  ? "text-pink"
+                  : ""
+              }
+            />{" "}
+            Add to favorites
+          </button>
         </div>
         {hostedPlace?.images && (
           <div className="flex gap-1">
@@ -235,18 +261,20 @@ const Page = ({ params }: { params: { id: string } }) => {
             {hostedPlace?.bath_room_number} baths
           </span>
         </div>
-        <div className=" border-b w-full border-lightGray"/>
-        <p className="py-5 text-md font-medium">Hosted by {hostedPlace?.user_email}</p>
-        <div className=" border-b w-full border-lightGray"/>
+        <div className=" border-b w-full border-lightGray" />
+        <p className="py-5 text-md font-medium">
+          Hosted by {hostedPlace?.user_email}
+        </p>
+        <div className=" border-b w-full border-lightGray" />
         <span className="w-[700px] flex">{hostedPlace?.place_description}</span>
-        <div className=" border-b w-full border-lightGray"/>
+        <div className=" border-b w-full border-lightGray" />
 
         <div className="flex justify-between w-full">
           <div>
             <span className="grid gap-5">
               <p className="text-md font-bold">What this place offers</p>
               <div className="grid grid-cols-2 gap-10 w-[600px]">
-                {hostedPlace?.amenities.map((item,index) => {
+                {hostedPlace?.amenities.map((item, index) => {
                   const amt = Amenities.find((i) => i.name == item);
                   return (
                     <span className="flex items-center gap-2" key={index}>
@@ -262,7 +290,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 })}
               </div>
             </span>
-            <div className=" border-b w-full border-lightGra py-5"/>
+            <div className=" border-b w-full border-lightGra py-5" />
 
             <div className="w-[500px]">
               <Calendar
@@ -351,18 +379,28 @@ const Page = ({ params }: { params: { id: string } }) => {
             <div className="flex justify-between font-medium text-md">
               <span>Total</span>
               <span>
-                {hostedPlace?.price
+                {hostedPlace?.price && selectedDates.length > 1
                   ? hostedPlace?.price * numberOfDays * 0.1 +
                     hostedPlace?.price * numberOfDays
-                  : ""}
+                  : 0}
                 $
               </span>
             </div>
           </div>
         </div>
-      </div>
+      </div>:
+      <div className="h-[80vh] flex items-center justify-center">
+        <l-dot-wave
+  size="100"
+  speed="1.25" 
+  color="#EE3080" 
+></l-dot-wave>
+        </div>
+      }
     </div>
   );
 };
 
 export default Page;
+
+

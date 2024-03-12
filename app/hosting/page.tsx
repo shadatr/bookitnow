@@ -5,11 +5,15 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { redirect } from "next/navigation";
 
 
-const Page = () => {
+const Page = async () => {
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType[]>([]);
-
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    redirect('/')
+  }
   useEffect(() => {
     const handleUpload = async () => {
       const session = await supabase.auth.getSession();

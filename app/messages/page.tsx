@@ -3,9 +3,10 @@ import { supabase } from "@/lib/supabase";
 import { PlaceType, UserMessagesDetailsType } from "@/types";
 import { Session } from "@supabase/supabase-js";
 import axios from "axios";
+import { redirect } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const Page = () => {
+const Page = async () => {
   const [refresh, setRefresh] = useState(false);
   const [emails, setEmails] = useState<PlaceType[]>([]);
   const [selectedEmail, setSelectedEmail] = useState<string>();
@@ -14,6 +15,10 @@ const Page = () => {
   const [session, setSession] = useState<Session | null>();
   const [messages, setMessages] = useState<UserMessagesDetailsType[]>([]);
 
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    redirect('/')
+  }
   useEffect(() => {
     const changes = supabase
       .channel("table-db-changes")
