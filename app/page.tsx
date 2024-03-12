@@ -102,6 +102,7 @@ export default function Home() {
       setPlaceAmenities((prevState) => prevState.filter((_, i) => i !== index));
     }
   };
+
   dotWave.register();
 
   return (
