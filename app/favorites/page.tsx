@@ -6,23 +6,23 @@ import { Session } from "@supabase/supabase-js";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 
-export default async function Page() {
+export default function Page() {
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType[]>([]);
   const [favorites, setFavorites] = useState<FavoritesType[]>([]);
   const [session, setSession] = useState<Session | null>();
   const [refresh, setRefresh] = useState(false);
-
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) {
-    redirect('/')
-  }
+  const router = useRouter()
 
   useEffect(() => {
     const handleUpload = async () => {
+      const { data, error } = await supabase.auth.getUser()
+      if (error || !data?.user) {
+        router.push('/login')
+      }
         const data3 = await supabase.auth.getSession();
         setSession(data3.data.session);
       const data4 = await axios.get(

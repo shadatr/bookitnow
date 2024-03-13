@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { PlaceType, UserMessagesDetailsType } from "@/types";
 import { Session } from "@supabase/supabase-js";
 import axios from "axios";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const Page = async () => {
@@ -14,11 +14,8 @@ const Page = async () => {
   const [msgText, setMsgText] = useState("");
   const [session, setSession] = useState<Session | null>();
   const [messages, setMessages] = useState<UserMessagesDetailsType[]>([]);
+  const router = useRouter()
 
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) {
-    redirect('/')
-  }
   useEffect(() => {
     const changes = supabase
       .channel("table-db-changes")
@@ -58,6 +55,10 @@ const Page = async () => {
 
   useEffect(() => {
     const handleUpload = async () => {
+      const { data, error } = await supabase.auth.getUser()
+      if (error || !data?.user) {
+        router.push('/login')
+      }
       const session = await supabase.auth.getSession();
       const id = session.data.session?.user.email;
       setSession(session.data.session);

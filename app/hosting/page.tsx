@@ -5,23 +5,25 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 
 const Page = async () => {
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType[]>([]);
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) {
-    redirect('/')
-  }
+  const router = useRouter()
+
   useEffect(() => {
     const handleUpload = async () => {
+      const { data, error } = await supabase.auth.getUser()
+      if (error || !data?.user) {
+        router.push('/login')
+      }
       const session = await supabase.auth.getSession();
       const id = session.data.session?.user.id;
 
-      const data = await axios.get(`/api/hosting/${id}`);
-      setHostedPlaces(data.data.message.data);
-      console.log(data.data.message.data);
+      const data1 = await axios.get(`/api/hosting/${id}`);
+      setHostedPlaces(data1.data.message.data);
+      console.log(data1.data.message.data);
     };
     handleUpload();
   }, []);

@@ -99,10 +99,11 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   const handleReserve = async () => {
-    const { data, error } = await supabase.auth.getUser();
+    const { data, error } = await supabase.auth.getUser()
     if (error || !data?.user) {
-      redirect("/");
+      router.push('/login')
     }
+    
     if (selectedDates.length == 2) {
       const amount = hostedPlace?.price
         ? hostedPlace?.price * numberOfDays * 0.1 +

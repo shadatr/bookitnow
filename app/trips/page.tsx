@@ -3,27 +3,29 @@ import { supabase } from '@/lib/supabase';
 import { PlaceType, ReservationsType } from '@/types';
 import axios from 'axios';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
-const Page = async () => {
+const Page = () => {
     const [trips, setTrips] = useState<ReservationsType[]>([]);
     const [places, setPlaces] = useState<PlaceType[]>([]);
     const [uniquePlaces, setUniquePlaces] = useState<number[]>([]);
+    const router = useRouter()
 
-    const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) {
-    redirect('/')
-  }
   useEffect(() => {
+    
     const handleUpload = async () => {
+      const { data, error } = await supabase.auth.getUser()
+      if (error || !data?.user) {
+        router.push('/login')
+      }
       const session = await supabase.auth.getSession();
       const id = session.data.session?.user.id;
 
-      const data = await axios.get(`/api/trips/${id}`);
-      setTrips(data.data.message.data);
+      const data1 = await axios.get(`/api/trips/${id}`);
+      setTrips(data1.data.message.data);
 
-      const placesPromises = data.data.message.data.map(async (place:any) => {
+      const placesPromises = data1.data.message.data.map(async (place:any) => {
         const responseReq = await axios.get(`/api/hosted_place/${place.place_id}`);
         const placeMessage  =
           responseReq.data.message.data;
@@ -33,7 +35,7 @@ const Page = async () => {
       const placesData = await Promise.all(placesPromises);
       setPlaces(placesData.flat())
 
-      const uniquePl = new Set(data.data.message.data.map((item: ReservationsType) => item.place_id));
+      const uniquePl = new Set(data1.data.message.data.map((item: ReservationsType) => item.place_id));
       const uniqueArray = [...uniquePl];
       const uniqueStringArray = uniqueArray.map(item => item as number); // Explicit cast
       setUniquePlaces(uniqueStringArray);
