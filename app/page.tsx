@@ -273,9 +273,15 @@ export default function Home() {
         </div>
       ) : (
         <div className="h-[80vh] flex items-center justify-center">
-          <l-dot-wave size="100" speed="1.25" color="#EE3080"></l-dot-wave>
+          <div className="container">
+  <div className="dot"></div>
+  <div className="dot"></div>
+  <div className="dot"></div>
+  <div className="dot"></div>
+</div>
         </div>
       )}
     </div>
   );
 }
+

@@ -55,7 +55,7 @@ const Header = () => {
   };
 
   return (
-    <div className={` flex z-0 justify-between items-center w-screen pt-5 px-60 ${scroll?"bg-secondary":""}`}>
+    <div className={` flex z-0 justify-between items-center w-screen pt-5 px-60 ${isActive=='/login'||isActive=='/signup'?"absolute":"flex"}`}>
       <Link href={'/'}><Image src={'/BookItNow.png'} width={100} height={100} alt={"logo"} /></Link>
       {session?.user||session ? (
         <Sheet>
