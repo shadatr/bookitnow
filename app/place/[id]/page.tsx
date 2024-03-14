@@ -179,6 +179,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             <span className=" text-xmd font-bold">
               {hostedPlace?.place_name}
             </span>
+            {session?.user&&
             <button
               onClick={handleAddToFavorites}
               className="flex items-center"
@@ -192,6 +193,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               />{" "}
               Add to favorites
             </button>
+            }
           </div>
           {hostedPlace?.images && (
             <div className="flex gap-1">
@@ -250,7 +252,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                       height={180}
                       src={pic}
                       alt="Selected"
-                      className={`w-[1000px] h-auto `}
+                      className={`w-[800px] h-auto `}
                     />
                   </span>
                 ))}

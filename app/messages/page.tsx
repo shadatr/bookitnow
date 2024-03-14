@@ -3,10 +3,10 @@ import { supabase } from "@/lib/supabase";
 import { PlaceType, UserMessagesDetailsType } from "@/types";
 import { Session } from "@supabase/supabase-js";
 import axios from "axios";
-import { redirect, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const Page = async () => {
+const Page =  () => {
   const [refresh, setRefresh] = useState(false);
   const [emails, setEmails] = useState<PlaceType[]>([]);
   const [selectedEmail, setSelectedEmail] = useState<string>();
@@ -99,7 +99,7 @@ const Page = async () => {
   );
 
   return (
-    <div className="flex justify-center items-center w-[100%] p-40">
+    <div className="flex justify-center items-center w-[100%] p-20">
       <div className="flex w-[1000px] h-[600px] shadow-large rounded-large">
         <div className="flex flex-col w-[40%] h-full bg-lightGray overflow-y-auto">
           {emails.map((item, index) => (
@@ -123,7 +123,7 @@ const Page = async () => {
           ))}
         </div>
         <div className="flex flex-col w-[60%] h-full overflow-y-auto">
-          {filteredMessages ? (
+          {filteredMessages.length ? (
             <div className="flex flex-col h-[500px] overflow-y-auto p-5">
               {filteredMessages
                 .filter(
@@ -157,21 +157,21 @@ const Page = async () => {
             </div>
           ) : (
             <div className="flex h-[600px] justify-center items-center font-bold">
-              no messages
+              There is no messages yet!
             </div>
           )}
           {selectedEmail&&
-          <div className="flex items-center">
+          <div className="flex items-center rounded-large focus:bg-lightGray">
             <span className="w-full rounded-[20px] lg:p-5 sm:p-3">
               <textarea
-                className="w-full outline-none lg:h-[20px] sm:h-[20px]"
+                className="w-full outline-none lg:h-[50px] sm:h-[20px] bg-lightGray p-2 rounded-large"
                 placeholder="write your message here..."
                 value={msgText}
                 onChange={(e) => setMsgText(e.target.value)}
               />
             </span>
             <span
-              className="bg-blue1 rounded-[20px] lg:py-4 lg:px-6 sm:py-2 sm:px-3 font-bold cursor-pointer"
+              className="bg-pink rounded-[20px] text-secondary lg:py-4 lg:px-6 sm:py-2 sm:px-3 font-bold cursor-pointer"
               onClick={handelSend}
             >
               Send

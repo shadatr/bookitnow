@@ -5,10 +5,10 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 
-const Page = async () => {
+const Page = () => {
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType[]>([]);
   const router = useRouter()
 
