@@ -89,7 +89,7 @@ const SearchBar = () => {
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      if (offset > 100) {
+      if (offset > 120) {
         setScroll(true);
       } else {
         setScroll(false);
@@ -177,7 +177,7 @@ const SearchBar = () => {
     <div className="w-full flex flex-col items-center justify-center ">
       <div
         className={` flex items-center border border-lightGray shadow-lg w-[1050px] py-2 px-10 rounded-full z-20 mt-3 text-xsm ${
-          scroll ? "fixed top-0" : ""
+          scroll ? "fixed top-0 bg-secondary" : ""
         }`}
       >
         <div className="w-[280px] flex flex-col justify-center">

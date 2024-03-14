@@ -7,12 +7,12 @@ import { Session } from "@supabase/supabase-js";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import "ldrs/dotWave";
 import { useSearchParams } from "next/navigation";
 
-export default function Home() {
+function Home() {
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType[]>([]);
   const [favorites, setFavorites] = useState<FavoritesType[]>([]);
   const [session, setSession] = useState<Session | null>();
@@ -62,11 +62,13 @@ export default function Home() {
     <div className="w-full flex flex-col items-center justify-center ">
       {loaded ? (
         <div className="w-full flex flex-col items-center justify-center ">
+
           <SearchBar />
+              
           <div className="mt-5 text-[15px] grid grid-cols-4 gap-5">
             {hostedPlaces?.map((item, index) => (
-              <div className="w-[300px] h-[280px] ">
-                {session?.user && (
+              <div className="w-[300px] ">
+                {session?.user.id && (
                   <FaHeart
                     size={30}
                     onClick={() => handleAddToFavorites(item.id)}
@@ -113,4 +115,12 @@ export default function Home() {
       )}
     </div>
   );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <Home />
+    </Suspense>
+  )
 }

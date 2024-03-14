@@ -6,7 +6,7 @@ import Image from "next/image";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { FiPlus } from "react-icons/fi";
 import { Calendar } from "@demark-pro/react-booking-calendar";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import asyncStripe from "@/lib/stripe";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
