@@ -22,7 +22,6 @@ function Home() {
 
   useEffect(() => {
     const handleUpload = async () => {
-       setLoaded(false);
       let url;
       if (searchParams.toString()) {
         url = `/api/searchBar/${searchParams.toString()}`;
