@@ -85,8 +85,8 @@ const Page = () => {
             );
           })
         ) : (
-          <div className="p-3 w-full items-center justify-center">
-            <div className="p-3">You didn't host any place yet!</div>
+          <div className="p-10 w-full items-center justify-center">
+            <div className="p-3">You don't have any trips yet!</div>
           </div>
         )}
       </div>
