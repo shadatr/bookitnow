@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 
 
-export const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
 export const metadata: Metadata = {
   title: "BookItNow",
