@@ -22,7 +22,7 @@ export default function Page() {
     const handleUpload = async () => {
       const { data, error } = await supabase.auth.getUser();
       if (error || !data?.user) {
-        router.push("/login");
+        router.push("/auth/login");
       }
       const data3 = await supabase.auth.getSession();
       setSession(data3.data.session);
