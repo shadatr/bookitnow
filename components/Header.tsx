@@ -114,11 +114,11 @@ const Header = () => {
             </div>
           </SheetContent>
         </Sheet>
-      ) : isActive == "/login" || isActive == "/signup" ? (
+      ) : isActive == "/auth/login" || isActive == "/auth/signup" ? (
         ""
       ) : (
         <Link
-          href="/login"
+          href="/auth/login"
           className="px-7 py-2 bg-primary text-secondary rounded-[5px]"
         >
           Login

@@ -102,7 +102,7 @@ const page = () => {
         </Button>
         <p>
           Don't have an account?{" "}
-          <Link href="signup" className="font-bold underline">
+          <Link href="/auth/signup" className="font-bold underline">
             Sign up
           </Link>
         </p>
