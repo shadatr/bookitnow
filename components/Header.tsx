@@ -5,7 +5,6 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
 import { LuMessageSquare } from "react-icons/lu";
-import { RiNotification4Line } from "react-icons/ri";
 import { TbPlaneInflight } from "react-icons/tb";
 import { FaRegHeart } from "react-icons/fa";
 import { BiHomeAlt } from "react-icons/bi";

@@ -14,8 +14,6 @@ import {
 } from "@/components/ui/popover";
 import { useEffect, useRef, useState } from "react";
 import { COUNTRIES } from "./countries";
-import CountrySelector from "./selector";
-import { SelectMenuOption } from "@/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IoFilter } from "react-icons/io5";
 import {
