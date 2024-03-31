@@ -61,10 +61,8 @@ function Home() {
     <div className="w-full flex flex-col items-center justify-center ">
       {loaded ? (
         <div className="w-full flex flex-col items-center justify-center ">
-
           <SearchBar />
-              
-          <div className="mt-5 text-[15px] grid grid-cols-4 gap-5">
+          <div className="mt-5 text-[15px] grid lg:grid-cols-4 gap-5">
             {hostedPlaces?.map((item, index) => (
               <div className="w-[300px] ">
                 {session?.user.id && (

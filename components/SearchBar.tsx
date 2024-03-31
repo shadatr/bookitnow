@@ -174,23 +174,23 @@ const SearchBar = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center ">
       <div
-        className={` flex items-center border border-lightGray shadow-lg w-[1050px] py-2 px-10 rounded-full z-20 mt-3 text-xsm ${
+        className={` flex items-center border border-lightGray shadow-lg lg:w-[1050px] sm:w-[350px] py-2 lg:px-10 rounded-full z-20 mt-3 text-xsm ${
           scroll ? "fixed top-0 bg-secondary" : ""
         }`}
       >
-        <div className="w-[280px] flex flex-col justify-center">
-          <p className="px-6 font-bold text-xsm">Where</p>
-          <Select >
-            <SelectTrigger className=" text-xsm border-none">
+        <div className="lg:w-[280px] sm:w-[50px] flex flex-col justify-center">
+          <p className="px-6 font-bold lg:text-xsm sm:text-xxsm">Where</p>
+          <Select>
+            <SelectTrigger className="border-none lg:text-xsm sm:text-xxsm">
               <SelectValue placeholder="Select a country/region" ref={country} />
             </SelectTrigger>
-            <SelectContent className="bg-secondary" >
+            <SelectContent className="bg-secondary lg:text-xsm sm:text-xxsm" >
               <SelectGroup>
-                <SelectLabel> countries</SelectLabel>
+                <SelectLabel className="lg:text-xsm sm:text-xxsm"> countries</SelectLabel>
                 {COUNTRIES.map((item) => (
                   <SelectItem
                     key={item.title}
-                    className="p-1"
+                    className="p-1 lg:text-xsm sm:text-xxsm"
                     value={item.title}
                     >
                     {item.title}
@@ -200,14 +200,14 @@ const SearchBar = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="w-[280px] flex flex-col justify-center">
-          <p className="px-6 font-bold text-xsm">Check In</p>
+        <div className="lg:w-[280px] sm:w-[50px] flex flex-col justify-center lg:text-xsm sm:text-xxsm">
+          <p className="px-6 font-bold lg:text-xsm sm:text-xxsm">Check In</p>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant={"ghost"}
                 className={cn(
-                  "w-[180px] text-[13px] justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl ",
+                  "lg:w-[180px] lg:text-xsm sm:text-xxsm justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl ",
                   !startDate && "text-muted-foreground"
                 )}
               >
@@ -225,14 +225,14 @@ const SearchBar = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="w-[280px] flex flex-col">
-          <p className="px-6 font-bold text-xsm">Check Out</p>
+        <div className="lg:w-[280px] sm:w-[50px] flex flex-col lg:text-xsm sm:text-xxsm">
+          <p className="px-6 font-bold lg:text-xsm sm:text-xxsm">Check Out</p>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant={"ghost"}
                 className={cn(
-                  "w-[180px] text-[13px] justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl",
+                  "lg:w-[180px] lg:text-xsm sm:text-xxsm justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl",
                   !endDate && "text-muted-foreground"
                 )}
               >
@@ -250,14 +250,14 @@ const SearchBar = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="w-[280px] flex flex-col justify-start">
-          <p className="px-6 font-bold text-xsm">who</p>
+        <div className="lg:w-[280px] sm:w-[50px] flex flex-col justify-start lg:text-xsm sm:text-xxsm">
+          <p className="px-6 font-bold lg:text-xsm sm:text-xxsm">who</p>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant={"ghost"}
                 className={cn(
-                  "w-[180px] justify-start text-left font-normal hover:bg-lightGray transtion-bg px-6 rounded-xl text-[13px]"
+                  "lg:w-[180px]  justify-start text-left font-normal hover:bg-lightGray transtion-bg px-6 rounded-xl text-[13px]"
                 )}
               >
                 {adultNumber + childrenNumber + infantsNumber
@@ -287,10 +287,10 @@ const SearchBar = () => {
                   />
                 </span>
               </div>
-              <div className="flex items-center justify-between border-b border-lightGray p-2">
+              <div className="flex items-center justify-between border-b border-lightGray p-2 lg:text-xsm sm:text-xxsm">
                 <span>
                   <p className="font-bold">Adult</p>
-                  <p className="text-xsm">Ages 2-12</p>
+                  <p >Ages 2-12</p>
                 </span>
                 <span className="flex items-center gap-2">
                   <CiCircleMinus
@@ -309,10 +309,10 @@ const SearchBar = () => {
                   />
                 </span>
               </div>
-              <div className="flex items-center justify-between p-2">
+              <div className="flex items-center justify-between p-2 lg:text-xsm sm:text-xxsm">
                 <span>
                   <p className="font-bold">Adult</p>
-                  <p className="text-xsm">Under 2</p>
+                  <p >Under 2</p>
                 </span>
                 <span className="flex items-center gap-2">
                   <CiCircleMinus
@@ -333,12 +333,12 @@ const SearchBar = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <BsSearch
+        {/* <BsSearch
           size={60}
           className="pr-5 cursor-pointer"
           color="#EE3080"
           onClick={()=>handleSearch(placeType)}
-        />
+        /> */}
       </div>
       <div className=" border-lightGray mt-8 border-b w-full" />
       <div className="flex gap-10 p-4 ">
