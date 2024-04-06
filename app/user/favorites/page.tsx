@@ -64,25 +64,25 @@ export default function Page() {
   return (
     <div className="w-full flex flex-col items-center justify-center ">
       {loaded?
-      <div className="mt-20 text-[15px] grid grid-cols-4 gap-5">
+      <div className="mt-20 text-[15px] grid lg:grid-cols-4 gap-5">
         {hostedPlaces ? (
           hostedPlaces?.map((item, index) => (
-            <div className="w-[300px] h-[280px] ">
-              {session?.user && (
+            <div className="w-[300px] ">
+              {session?.user.id && (
                 <FaHeart
                   size={30}
                   onClick={() => handleAddToFavorites(item.id)}
                   className={`absolute cursor-pointer m-3 z-10
-               ${
-                 favorites.find((i) => i.place_id == item?.id)
-                   ? "text-pink"
-                   : ""
-               }
-              `}
+           ${
+             favorites.find((i) => i.place_id == item?.id)
+               ? "text-pink"
+               : ""
+           }
+          `}
                 />
               )}
               <Link
-                href={`/place/${item.id}`}
+                href={`/user/place/${item.id}`}
                 className="w-[280px] "
                 key={index}
               >

@@ -11,6 +11,7 @@ import { Suspense, useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import "ldrs/dotWave";
 import { useSearchParams } from "next/navigation";
+import Header from "@/components/Header";
 
 function Home() {
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType[]>([]);
@@ -58,59 +59,62 @@ function Home() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center ">
-      {loaded ? (
-        <div className="w-full flex flex-col items-center justify-center ">
-          <SearchBar />
-          <div className="mt-5 text-[15px] grid lg:grid-cols-4 gap-5">
-            {hostedPlaces?.map((item, index) => (
-              <div className="w-[300px] ">
-                {session?.user.id && (
-                  <FaHeart
-                    size={30}
-                    onClick={() => handleAddToFavorites(item.id)}
-                    className={`absolute cursor-pointer m-3 z-10
+    <>
+      <Header />
+      <div className="w-full flex flex-col items-center justify-center ">
+        {loaded ? (
+          <div className="w-full flex flex-col items-center justify-center ">
+            <SearchBar />
+            <div className="mt-5 text-[15px] grid lg:grid-cols-4 gap-5">
+              {hostedPlaces?.map((item, index) => (
+                <div className="w-[300px] ">
+                  {session?.user.id && (
+                    <FaHeart
+                      size={30}
+                      onClick={() => handleAddToFavorites(item.id)}
+                      className={`absolute cursor-pointer m-3 z-10
                ${
                  favorites.find((i) => i.place_id == item?.id)
                    ? "text-pink"
                    : ""
                }
               `}
-                  />
-                )}
-                <Link
-                  href={`/place/${item.id}`}
-                  className="w-[280px] "
-                  key={index}
-                >
-                  <Image
-                    alt="image"
-                    src={item.images[0]}
-                    width={50}
-                    height={50}
-                    className="w-[300px] h-[280px] rounded-[10px] "
-                  />
-                  <p className="font-bold pt-2">{item.place_name}</p>
-                  <p>
-                    {item.country}, {item.province}
-                  </p>
-                  <p className="font-bold">{item.price}$ night</p>
-                </Link>
-              </div>
-            ))}
+                    />
+                  )}
+                  <Link
+                    href={`/user/place/${item.id}`}
+                    className="w-[280px] "
+                    key={index}
+                  >
+                    <Image
+                      alt="image"
+                      src={item.images[0]}
+                      width={50}
+                      height={50}
+                      className="w-[300px] h-[280px] rounded-[10px] "
+                    />
+                    <p className="font-bold pt-2">{item.place_name}</p>
+                    <p>
+                      {item.country}, {item.province}
+                    </p>
+                    <p className="font-bold">{item.price}$ night</p>
+                  </Link>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="h-[80vh] flex items-center justify-center">
-          <div className="container">
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
+        ) : (
+          <div className="h-[80vh] flex items-center justify-center">
+            <div className="container">
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -119,5 +123,5 @@ export default function Page() {
     <Suspense>
       <Home />
     </Suspense>
-  )
+  );
 }

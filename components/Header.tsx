@@ -56,12 +56,10 @@ const Header = () => {
 
   return (
     <div
-      className={` flex z-0 justify-between items-center w-screen pt-5 px-60 ${
-        isActive == "/login" || isActive == "/signup" ? "absolute" : "flex"
-      }`}
+      className={`flex z-0 justify-between items-center w-screen pt-5 lg:px-60 sm:px-1`}
     >
       <Link href={"/"}>
-        <Image src={"/BookItNow.png"} width={100} height={100} alt={"logo"} />
+        <Image src={"/BookItNow.png"} width={100} height={10} alt={"logo"} className="lg:w-100 h:w-100 sm:w-50 sm:h-50" />
       </Link>
       {session?.user || session ? (
         <Sheet>
@@ -71,12 +69,12 @@ const Header = () => {
                 src={
                   "https://github.com/shadcn.png"
                 }
-              />{" "}
+              />
             </Avatar>
           </SheetTrigger>
           <SheetContent className="bg-secondary flex flex-col text-md font-bold gap-0 m-0 px-0 py-10">
             <Link
-              href="/messages"
+              href="/user/messages"
               className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"
             >
               <LuMessageSquare color="#EE3080" size={25} />
@@ -84,21 +82,21 @@ const Header = () => {
             </Link>
 
             <Link
-              href="/trips"
+              href="/user/trips"
               className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"
             >
               <TbPlaneInflight color="#EE3080" size={25} />
               <p>Trips</p>
             </Link>
             <Link
-              href="/favorites"
+              href="/user/favorites"
               className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"
             >
               <FaRegHeart color="#EE3080" size={25} />
               <p>Favorites</p>
             </Link>
             <Link
-              href="/hosting"
+              href="/user/hosting"
               className="hover:bg-lightGray p-3 transtion-bg flex items-center gap-3"
             >
               <BiHomeAlt color="#EE3080" size={25} />

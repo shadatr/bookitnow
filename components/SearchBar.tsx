@@ -174,14 +174,14 @@ const SearchBar = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center ">
       <div
-        className={` flex items-center border border-lightGray shadow-lg lg:w-[1050px] sm:w-[350px] py-2 lg:px-10 rounded-full z-20 mt-3 text-xsm ${
+        className={` flex items-center justify-between gap-10 border px-1 border-lightGray shadow-lg lg:w-[1050px] sm:w-[300px] overflow-x-auto py-2 lg:px-10 lg:rounded-full sm:rounded-[30px] z-20 mt-3 text-xsm ${
           scroll ? "fixed top-0 bg-secondary" : ""
         }`}
       >
-        <div className="lg:w-[280px] sm:w-[50px] flex flex-col justify-center">
+        <div className="flex flex-col justify-center">
           <p className="px-6 font-bold lg:text-xsm sm:text-xxsm">Where</p>
           <Select>
-            <SelectTrigger className="border-none lg:text-xsm sm:text-xxsm">
+            <SelectTrigger className="border-none lg:text-xsm sm:text-xxsm sm:p-2 sm:h-[20px]">
               <SelectValue placeholder="Select a country/region" ref={country} />
             </SelectTrigger>
             <SelectContent className="bg-secondary lg:text-xsm sm:text-xxsm" >
@@ -200,14 +200,14 @@ const SearchBar = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="lg:w-[280px] sm:w-[50px] flex flex-col justify-center lg:text-xsm sm:text-xxsm">
+        <div className=" flex flex-col justify-center lg:text-xsm sm:text-xxsm">
           <p className="px-6 font-bold lg:text-xsm sm:text-xxsm">Check In</p>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant={"ghost"}
                 className={cn(
-                  "lg:w-[180px] lg:text-xsm sm:text-xxsm justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl ",
+                  "lg:text-xsm sm:text-xxsm justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl sm:p-2 sm:h-[20px] lg:h-auto lg:p-3",
                   !startDate && "text-muted-foreground"
                 )}
               >
@@ -215,7 +215,7 @@ const SearchBar = () => {
                 {startDate ? format(startDate, "PPP") : <span>Add dates</span>}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-secondary">
+            <PopoverContent className="w-auto p-0 bg-secondary ">
               <Calendar
                 mode="single"
                 selected={startDate}
@@ -225,14 +225,14 @@ const SearchBar = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="lg:w-[280px] sm:w-[50px] flex flex-col lg:text-xsm sm:text-xxsm">
-          <p className="px-6 font-bold lg:text-xsm sm:text-xxsm">Check Out</p>
+        <div className="flex flex-col lg:text-xsm sm:text-xxsm">
+          <p className="px-6 font-bold">Check Out</p>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant={"ghost"}
                 className={cn(
-                  "lg:w-[180px] lg:text-xsm sm:text-xxsm justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl",
+                  " lg:text-xsm sm:text-xxsm justify-start text-left font-normal hover:bg-lightGray transtion-bg rounded-xl sm:p-2 sm:h-[20px] lg:h-auto lg:p-3",
                   !endDate && "text-muted-foreground"
                 )}
               >
@@ -250,14 +250,14 @@ const SearchBar = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="lg:w-[280px] sm:w-[50px] flex flex-col justify-start lg:text-xsm sm:text-xxsm">
+        <div className="flex flex-col justify-start lg:text-xsm sm:text-xxsm">
           <p className="px-6 font-bold lg:text-xsm sm:text-xxsm">who</p>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant={"ghost"}
                 className={cn(
-                  "lg:w-[180px]  justify-start text-left font-normal hover:bg-lightGray transtion-bg px-6 rounded-xl text-[13px]"
+                  "justify-start text-left font-normal hover:bg-lightGray transtion-bg px-6 rounded-xl lg:text-sm sm:text-xxsm sm:p-2 sm:h-[20px] lg:h-auto lg:p-3"
                 )}
               >
                 {adultNumber + childrenNumber + infantsNumber
@@ -333,15 +333,15 @@ const SearchBar = () => {
             </PopoverContent>
           </Popover>
         </div>
-        {/* <BsSearch
+        <BsSearch
           size={60}
           className="pr-5 cursor-pointer"
           color="#EE3080"
           onClick={()=>handleSearch(placeType)}
-        /> */}
+        />
       </div>
       <div className=" border-lightGray mt-8 border-b w-full" />
-      <div className="flex gap-10 p-4 ">
+      <div className="flex items-center gap-10 p-4 lg:w-auto sm:w-[300px] overflow-x-auto">
         {places.map((place) => (
           <span
             className={`flex flex-col items-center justify-center text-darkGray ${
@@ -355,17 +355,17 @@ const SearchBar = () => {
             }}
                     
             >
-            <Image width={20} height={20} alt="icon" src={place.icon} />
-            <p>{place.name}</p>
+            <Image width={20} height={20} className="lg:w-8 lg:h-8 sm:w-5 sm:h-5 " alt="icon" src={place.icon} />
+            <p className="lg:text-sm sm:text-xsm">{place.name}</p>
           </span>
         ))}
         <Dialog>
           <DialogTrigger asChild>
-            <span className="cursor-pointer">
-              <IoFilter size={30} /> <p>Filter</p>
+            <span className="cursor-pointer sm:w-5 lg:w-20 ">
+              <IoFilter /> <p className="lg:text-sm sm:text-xsm">Filter</p>
             </span>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[800px] h-[600px] overflow-y-auto bg-secondary">
+          <DialogContent className="sm:w-[300px] lg:w-[1100px] h-[600px] lg:text-sm sm:text-xsm overflow-y-auto bg-secondary">
             <DialogHeader>
               <DialogTitle>Filter</DialogTitle>
             </DialogHeader>
@@ -454,7 +454,7 @@ const SearchBar = () => {
                     />
                     <label
                       htmlFor={item.name}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="lg:text-sm sm:text-xsm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
                       {item.name}
                     </label>

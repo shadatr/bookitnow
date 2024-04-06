@@ -29,27 +29,27 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center w-screen pt-24 ">
+    <div className="flex flex-col justify-center items-center w-screen lg:pt-24 sm:pt-16">
       <motion.div
               whileHover={{ y: 3 }}
               transition={{ duration: 0.5 }} className="flex justify-end items-center w-[80vw]">
         <Link
-          href="/hosting/become-a-host"
-          className="bg-pink rounded-[20px] p-3 my-5 font-bold text-secondary-50 shadow-lg"
+          href="/user/hosting/become-a-host"
+          className="bg-pink rounded-[20px] lg:p-3 lg:my-5 sm:p-2 sm:my-2 lg:text-sm sm:text-xsm font-bold text-secondary-50 shadow-lg"
         >
           Add new place
         </Link>
       </motion.div>
-      <table className="w-[1200px] border-collapse border border-gray-200 rounded-[10px]">
+      <table className="lg:w-[1200px] sm:w-[200px] overflow-x-auto border-collapse border border-gray-200 rounded-[10px] lg:text-sm sm:text-xxsm">
         <thead className="bg-gray-100">
           <tr>
-            <th className="p-3 text-left">NAME</th>
-            <th className="p-3 text-left">STATUS</th>
-            <th className="p-3 text-left">PRICE</th>
-            <th className="p-3 text-left">BEDROOMS</th>
-            <th className="p-3 text-left">BEDS</th>
-            <th className="p-3 text-left">BATHS</th>
-            <th className="p-3 text-left">LOCATION</th>
+            <th className="lg:p-3 sm:p-1 text-left">NAME</th>
+            <th className="lg:p-3 sm:p-1 text-left">STATUS</th>
+            <th className="lg:p-3 sm:p-1 text-left">PRICE</th>
+            <th className="lg:p-3 sm:p-1 text-left">BEDROOMS</th>
+            <th className="lg:p-3 sm:p-1 text-left">BEDS</th>
+            <th className="lg:p-3 sm:p-1 text-left">BATHS</th>
+            <th className="lg:p-3 sm:p-1 text-left">LOCATION</th>
           </tr>
         </thead>
         <tbody>
@@ -57,16 +57,16 @@ const Page = () => {
             hostedPlaces.map((item, index) => (
               <tr className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
                 <td className="p-3">
-                  <Link href={`/hosted-place/${item.id}`}>
+                  <Link href={`/user/hosted-place/${item.id}`}>
                     {item.place_name}
                   </Link>
                 </td>
-                <td className="p-3">{item.status}</td>
-                <td className="p-3">{item.price}</td>
-                <td className="p-3">{item.bed_room_number}</td>
-                <td className="p-3">{item.bed_number}</td>
-                <td className="p-3">{item.bath_room_number}</td>
-                <td className="p-3">
+                <td className="lg:p-3 sm:p-1">{item.status}</td>
+                <td className="lg:p-3 sm:p-1">{item.price}</td>
+                <td className="lg:p-3 sm:p-1">{item.bed_room_number}</td>
+                <td className="lg:p-3 sm:p-1">{item.bed_number}</td>
+                <td className="lg:p-3 sm:p-1">{item.bath_room_number}</td>
+                <td className="lg:p-3 sm:p-1">
                   {item.country}, {item.province}
                 </td>
               </tr>

@@ -99,8 +99,8 @@ const Page =  () => {
   );
 
   return (
-    <div className="flex justify-center items-center w-[100%] p-20">
-      <div className="flex w-[1000px] h-[600px] shadow-large rounded-large">
+    <div className="flex justify-center items-center w-[100%] lg:p-20 sm:pt-20">
+      <div className="flex lg:w-[1000px] sm:w-[350px] h-[600px] shadow-large rounded-large">
         <div className="flex flex-col w-[40%] h-full bg-lightGray overflow-y-auto">
           {emails.map((item, index) => (
             <span
@@ -108,23 +108,23 @@ const Page =  () => {
               onClick={() => {
                 setSelectedEmail(item.user_email), setSelectedPlace(item.id);
               }}
-              className={` flex flex-col transition-bg p-4 rounded-large ${
+              className={` flex flex-col transition-bg p-4 rounded-large lg:text-sm sm:text-xxsm ${
                 selectedEmail === item.user_email &&
-                "bg-secondary font-bold border border-darkGray"
+                "bg-secondary font-bold border border-darkGray "
               }`}
             >
                 <span>
               {item.place_name}
                 </span>
-                <span className=" text-xsm">
+                <span className="lg:text-xsm sm:text-xxsm">
               {item.user_email} 
                 </span>
             </span>
           ))}
         </div>
-        <div className="flex flex-col w-[60%] h-full overflow-y-auto">
-          {filteredMessages.length ? (
-            <div className="flex flex-col h-[500px] overflow-y-auto p-5">
+        <div className="flex flex-col w-[60%] h-full overflow-y-auto lg:text-sm sm:text-xsm">
+          {filteredMessages.length? (
+            <div className="flex flex-col h-[600px] overflow-y-auto lg:p-5 sm:p-2">
               {filteredMessages
                 .filter(
                   (i) =>
@@ -156,7 +156,7 @@ const Page =  () => {
                 ))}
             </div>
           ) : (
-            <div className="flex h-[600px] justify-center items-center font-bold">
+            selectedEmail&& <div className="flex h-[600px] justify-center items-center font-bold">
               There is no messages yet!
             </div>
           )}
@@ -164,7 +164,7 @@ const Page =  () => {
           <div className="flex items-center rounded-large focus:bg-lightGray">
             <span className="w-full rounded-[20px] lg:p-5 sm:p-3">
               <textarea
-                className="w-full outline-none lg:h-[50px] sm:h-[20px] bg-lightGray p-2 rounded-large"
+                className="w-full outline-none lg:h-[50px] sm:h-[30px] bg-lightGray p-2 rounded-large"
                 placeholder="write your message here..."
                 value={msgText}
                 onChange={(e) => setMsgText(e.target.value)}

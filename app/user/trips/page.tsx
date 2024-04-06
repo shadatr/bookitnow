@@ -47,7 +47,7 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="w-[100%] flex  justify-start items-center pt-10">
+    <div className="w-[100%] flex justify-start items-center pt-10">
       <div className="flex flex-col">
         <div className="text-xmd font-bold px-10">Your Trips</div>
         <div className="border-b border-lightGray w-screen" />
@@ -56,32 +56,41 @@ const Page = () => {
             const selectedPlace = places.find((i) => i.id == item);
             const selectedTrips = trips.filter((i) => i.place_id == item);
             return (
-              <><Link
-                className="flex gap-5 p-10"
-                href={`/hosted-place/${selectedPlace?.id}`}
-              >
-                <Image
-                  src={selectedPlace?.images[0] || ""}
-                  alt="image"
-                  width={100}
-                  height={100}
-                  className="w-[200px] h-[140px] rounded-[10px]" />
-                <div>
-                  <div className="text-md font-medium">{selectedPlace?.place_name}</div>
-                  <div className="font-bold">
-                    {selectedPlace?.price
-                      ? selectedPlace?.price * selectedTrips.length * 0.1 +
-                      selectedPlace?.price * selectedTrips.length
-                      : ""}$
-                  </div>
+              <>
+                <Link
+                  className="flex gap-5 lg:p-10 sm:p-5 sm:flex-col lg:flex-row"
+                  href={`/user/hosted-place/${selectedPlace?.id}`}
+                >
+                  <Image
+                    src={selectedPlace?.images[0] || ""}
+                    alt="image"
+                    width={100}
+                    height={100}
+                    className="w-[200px] h-[140px] rounded-[10px]"
+                  />
                   <div>
-                    {selectedPlace?.country}, {selectedPlace?.province}
+                    <div className="lg:text-md sm:text-sm font-medium">
+                      {selectedPlace?.place_name}
+                    </div>
+                    <div className="font-bold">
+                      {selectedPlace?.price
+                        ? selectedPlace?.price * selectedTrips.length * 0.1 +
+                          selectedPlace?.price * selectedTrips.length
+                        : ""}
+                      $
+                    </div>
+                    <div>
+                      {selectedPlace?.country}, {selectedPlace?.province}
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col pl-20">
-                  {selectedTrips.map((i) => <p>{i.date}</p>)}
-                </div>
-              </Link><div className="border-b border-lightGray w-screen" /></>
+                  <div className="flex flex-col lg:pl-20">
+                    {selectedTrips.map((i) => (
+                      <p>{i.date}</p>
+                    ))}
+                  </div>
+                </Link>
+                <div className="border-b border-lightGray w-screen" />
+              </>
             );
           })
         ) : (

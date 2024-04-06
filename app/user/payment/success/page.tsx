@@ -10,7 +10,7 @@ const page = () => {
           <Image width={100} height={100} src={"/checked.png"} alt="checked" />
           <span>Reservation done successfully!</span>
         </div>
-        <Link href={'/trips'} className="bg-pink text-secondary p-3 font-bold rounded-[10px]">Check your trips</Link>
+        <Link href={'/user/trips'} className="bg-pink text-secondary p-3 font-bold rounded-[10px]">Check your trips</Link>
       </div>
     </div>
   );
