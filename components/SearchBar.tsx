@@ -174,10 +174,9 @@ const SearchBar = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center ">
       <div
-        className={` flex items-center justify-between gap-10 border px-1 border-lightGray shadow-lg lg:w-[1050px] sm:w-[300px] overflow-x-auto py-2 lg:px-10 lg:rounded-full sm:rounded-[30px] z-20 mt-3 text-xsm ${
+        className={` flex items-center justify-between gap-10 border px-1 border-lightGray shadow-lg lg:w-[1050px] sm:w-[350px] overflow-x-auto py-2 lg:px-10 lg:rounded-full sm:rounded-[30px] z-20 mt-3 text-xsm ${
           scroll ? "fixed top-0 bg-secondary" : ""
-        }`}
-      >
+        }`}>
         <div className="flex flex-col justify-center">
           <p className="px-6 font-bold lg:text-xsm sm:text-xxsm">Where</p>
           <Select>
@@ -266,10 +265,10 @@ const SearchBar = () => {
               </Button>
             </PopoverTrigger>
             <PopoverContent className={cn("rounded-3xl bg-secondary")}>
-              <div className="flex items-center justify-between border-b border-lightGray p-2">
+              <div className="flex items-center justify-between border-b border-lightGray p-2 lg:text-xsm sm:text-xxsm">
                 <span>
                   <p className="font-bold">Adult</p>
-                  <p className="text-xsm">Ages 13 or above</p>
+                  <p className="lg:text-xsm sm:text-xxsm">Ages 13 or above</p>
                 </span>
                 <span className="flex items-center gap-2">
                   <CiCircleMinus
@@ -333,12 +332,15 @@ const SearchBar = () => {
             </PopoverContent>
           </Popover>
         </div>
+        <div>
+
         <BsSearch
-          size={60}
-          className="pr-5 cursor-pointer"
+          size={40}
+          className="pr-5 cursor-pointer "
           color="#EE3080"
           onClick={()=>handleSearch(placeType)}
         />
+        </div>
       </div>
       <div className=" border-lightGray mt-8 border-b w-full" />
       <div className="flex items-center gap-10 p-4 lg:w-auto sm:w-[300px] overflow-x-auto">

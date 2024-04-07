@@ -11,6 +11,7 @@ const Page = () => {
   const [trips, setTrips] = useState<ReservationsType[]>([]);
   const [places, setPlaces] = useState<PlaceType[]>([]);
   const [uniquePlaces, setUniquePlaces] = useState<number[]>([]);
+  const [loaded, setLoaded] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -40,16 +41,18 @@ const Page = () => {
         data1.data.message.data.map((item: ReservationsType) => item.place_id)
       );
       const uniqueArray = [...uniquePl];
-      const uniqueStringArray = uniqueArray.map((item) => item as number); // Explicit cast
+      const uniqueStringArray = uniqueArray.map((item) => item as number);
       setUniquePlaces(uniqueStringArray);
+      setLoaded(true)
     };
     handleUpload();
   }, []);
 
   return (
     <div className="w-[100%] flex justify-start items-center pt-10">
+      {loaded? 
       <div className="flex flex-col">
-        <div className="text-xmd font-bold px-10">Your Trips</div>
+        <div className="text-xmd font-bold lg:px-10 sm:px-5">Your Trips</div>
         <div className="border-b border-lightGray w-screen" />
         {uniquePlaces.length ? (
           uniquePlaces.map((item, index) => {
@@ -94,11 +97,19 @@ const Page = () => {
             );
           })
         ) : (
-          <div className="p-10 w-full items-center justify-center">
+          <div className="lg:p-10 sm:p-5 w-full items-center justify-center">
             <div className="p-3">You don't have any trips yet!</div>
           </div>
         )}
       </div>
+      :<div className="h-[60vh] flex items-center justify-center w-[90%]">
+      <div className="container">
+        <div className="dot"></div>
+        <div className="dot"></div>
+        <div className="dot"></div>
+        <div className="dot"></div>
+      </div>
+    </div>}
     </div>
   );
 };

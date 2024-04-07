@@ -70,7 +70,9 @@ const Page =  () => {
       const uniqueEmails: PlaceType[] = Array.from(
         new Set(res.flatMap((msg) => msg.place ?? []))
       );
-      setEmails(uniqueEmails.filter((email) => email !== undefined));
+      const filteredEmails=uniqueEmails.filter((email) => email !== undefined);
+      setEmails(filteredEmails);
+      setSelectedEmail(filteredEmails[0].user_email)
     };
     handleUpload();
   }, [refresh]);
@@ -102,7 +104,8 @@ const Page =  () => {
     <div className="flex justify-center items-center w-[100%] lg:p-20 sm:pt-20">
       <div className="flex lg:w-[1000px] sm:w-[350px] h-[600px] shadow-large rounded-large">
         <div className="flex flex-col w-[40%] h-full bg-lightGray overflow-y-auto">
-          {emails.map((item, index) => (
+          {emails.length ?
+          emails.map((item, index) => (
             <span
               key={index}
               onClick={() => {
@@ -120,7 +123,7 @@ const Page =  () => {
               {item.user_email} 
                 </span>
             </span>
-          ))}
+          )):<div className="font-black p-4">There is no user to connect yet!</div>}
         </div>
         <div className="flex flex-col w-[60%] h-full overflow-y-auto lg:text-sm sm:text-xsm">
           {filteredMessages.length? (
