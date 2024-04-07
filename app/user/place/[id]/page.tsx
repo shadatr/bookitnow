@@ -174,15 +174,15 @@ const Page = ({ params }: { params: { id: string } }) => {
   return (
     <div className="w-[100%] flex justify-center items-center">
       {loaded ? (
-        <div className="flex flex-col gap-5 py-10 w-[1100px]">
-          <div className="flex justify-between items-center">
-            <span className=" text-xmd font-bold">
+        <div className="flex flex-col gap-5 py-10 lg:w-[1100px] sm:w-[350px]">
+          <div className="flex justify-between items-center gap-4">
+            <span className=" lg:text-xmd sm:text-sm font-bold">
               {hostedPlace?.place_name}
             </span>
             {session?.user&&
             <button
               onClick={handleAddToFavorites}
-              className="flex items-center"
+              className="flex items-center lg:text-sm sm:text-xsm"
             >
               <FaHeart
                 className={
@@ -196,20 +196,20 @@ const Page = ({ params }: { params: { id: string } }) => {
             }
           </div>
           {hostedPlace?.images && (
-            <div className="flex gap-1">
+            <div className="flex lg:flex-row sm:flex-col gap-1">
               <Image
                 onClick={() => setImagesOpened(true)}
                 width={700}
                 height={500}
                 src={hostedPlace?.images[0]}
                 alt="Selected"
-                className={`w-[550px] h-[360px] cursor-pointer`}
+                className={`lg:w-[550px] lg:h-[360px] sm:w-[350px] sm:h-[250px] cursor-pointer`}
               />
               <div className="grid grid-cols-2 gap-1">
                 {hostedPlace.images.slice(0, 4).map((pic, index) => (
                   <span key={index}>
                     {index == 3 && hostedPlace?.images.length > 5 ? (
-                      <span className="absolute items-center justify-center w-[280px] h-[175px] p-2 bg-image">
+                      <span className="absolute items-center justify-center  p-2 bg-image">
                         <p
                           className="hover:cursor-pointer flex items-center justify-center w-full h-full text-secondary"
                           onClick={() => setImagesOpened(true)}
@@ -229,7 +229,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                       height={180}
                       src={pic}
                       alt="Selected"
-                      className={`w-[280px] h-[175px] cursor-pointer `}
+                      className={`lg:w-[280px] lg:h-[175px] sm:w-[170px] sm:h-[140px]  cursor-pointer `}
                     />
                   </span>
                 ))}
@@ -237,7 +237,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             </div>
           )}
           {imagesOpened && (
-            <div className="absolute right-0 top-0 bg-secondary w-screen z-100">
+            <div className="absolute right-0 top-0 bg-secondary w-screen h-[100h] z-100">
               <HiOutlineXMark
                 className="cursor-pointer  m-5 "
                 size="30"
@@ -252,7 +252,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                       height={180}
                       src={pic}
                       alt="Selected"
-                      className={`w-[800px] h-auto `}
+                      className={`lg:w-[800px] sm:w-[300px] h-auto `}
                     />
                   </span>
                 ))}
@@ -263,27 +263,27 @@ const Page = ({ params }: { params: { id: string } }) => {
             <span className=" text-md font-bold">
               {hostedPlace?.country} , {hostedPlace?.province}
             </span>
-            <span className="text-darkGray">
+            <span className="text-darkGray lg:text-sm sm:text-xsm">
               {hostedPlace?.guest_number} guests •{" "}
               {hostedPlace?.bed_room_number} bedroom • {hostedPlace?.bed_number}{" "}
               bed • {hostedPlace?.bath_room_number} baths
             </span>
           </div>
           <div className=" border-b w-full border-lightGray" />
-          <p className="py-5 text-md font-medium">
+          <p className="lg:py-5 sm:py-2 lg:text-md sm:text-sm font-medium">
             Hosted by {hostedPlace?.user_email}
           </p>
           <div className=" border-b w-full border-lightGray" />
-          <span className="w-[700px] flex">
+          <span className="lg:w-[700px] sm:w-[300px] sm:text-xxsm lg:text-sm flex">
             {hostedPlace?.place_description}
           </span>
           <div className=" border-b w-full border-lightGray" />
 
-          <div className="flex justify-between w-full">
+          <div className="flex lg:justify-between sm:flex-col lg:flex-row w-full">
             <div>
               <span className="grid gap-5">
-                <p className="text-md font-bold">What this place offers</p>
-                <div className="grid grid-cols-2 gap-10 w-[600px]">
+                <p className="sm:text-sm lg:text-md font-bold">What this place offers</p>
+                <div className="grid grid-cols-2 lg:gap-10 sm:gap-5 lg:w-[600px] sm:w-[300px]">
                   {hostedPlace?.amenities.map((item, index) => {
                     const amt = Amenities.find((i) => i.name == item);
                     return (
@@ -293,16 +293,18 @@ const Page = ({ params }: { params: { id: string } }) => {
                           alt={amt?.name || ""}
                           width={30}
                           height={30}
+                          className="lg:w-30 lg:h-30 sm:w-5 sm:h-5"
                         />
-                        <p className="text-sm font-bold">{amt?.name}</p>
+                        <p className="lg:text-sm sm:text-xsm font-bold">{amt?.name}</p>
                       </span>
                     );
                   })}
                 </div>
               </span>
-              <div className=" border-b w-full border-lightGra py-5" />
+              <div className=" border-b w-full border-lightGray py-5" />
                   {!imagesOpened&&
-              <div className="w-[500px] z-10">
+                  <div className=" flex lg:flex-row sm:flex-col lg:gap-60 sm:gap-20 w-full">
+              <div className="lg:w-[500px] sm:w-[300px] z-10">
                 <Calendar
                   classNamePrefix="calendar z-10"
                   selected={selectedDates}
@@ -339,24 +341,22 @@ const Page = ({ params }: { params: { id: string } }) => {
                   range={true}
                 />
               </div>
-                  }
-            </div>
-            <div className="border border-lightGray rounded-2xl shadow-lg p-8 flex flex-col gap-3 h-[400px]">
-              <p className="font-bold text-md">{hostedPlace?.price} $ night</p>
+            <div className="border border-lightGray rounded-2xl shadow-lg p-8 flex flex-col gap-3 h-[400px] lg:text-sm sm:text-xsm">
+              <p className="font-bold lg:text-md sm:text-sm">{hostedPlace?.price} $ night</p>
               <div className="flex">
-                <span className="border rounded-l-[10px] py-2 px-8 text-xsm">
+                <span className="border rounded-l-[10px] py-2 px-8 lg:text-xsm sm:text-xxsm">
                   <p className="font-bold">CHECK-IN</p>
                   <p>
                     {selectedDates[0]
                       ? new Date(
                           selectedDates[0].getTime() + 24 * 60 * 60 * 1000
-                        ) // Adding one day in milliseconds
+                        ) 
                           .toISOString()
                           .split("T")[0]
                       : "--"}
                   </p>
                 </span>
-                <span className="border py-2 rounded-r-[10px] px-8 text-xsm">
+                <span className="border py-2 rounded-r-[10px] px-8 lg:text-xsm sm:text-xxsm">
                   <p className="font-bold">CHECK-OUT</p>
                   <p>
                     {selectedDates[1]
@@ -366,7 +366,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </span>
               </div>
               <button
-                className="bg-pink text-secondary p-3 font-bold rounded-[10px]"
+                className="bg-pink text-secondary lg:p-3 sm:p-2 lg:text-sm sm:text-xsm font-bold rounded-[10px]"
                 onClick={handleReserve}
               >
                 Reserve
@@ -389,7 +389,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </span>
               </div>
               <div className="border border-b " />
-              <div className="flex justify-between font-medium text-md">
+              <div className="flex justify-between font-medium lg:text-md sm:text-xsm">
                 <span>Total</span>
                 <span>
                   {hostedPlace?.price && selectedDates.length > 1
@@ -399,6 +399,10 @@ const Page = ({ params }: { params: { id: string } }) => {
                   $
                 </span>
               </div>
+            </div>
+            </div>
+
+                  }
             </div>
           </div>
         </div>

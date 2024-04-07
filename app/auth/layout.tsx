@@ -9,7 +9,7 @@ export default function RootLayout({
   return (
       <div>
         <Link href={"/"}>
-        <Image src={"/BookItNow.png"} width={150} height={100} alt={"logo"} />
+        <Image src={"/BookItNow.png"} width={150} height={100} alt={"logo"} className="fixed top-0 left-0 m-5" />
       </Link>
         {children}
       </div>

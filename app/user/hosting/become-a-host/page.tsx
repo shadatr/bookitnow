@@ -213,29 +213,29 @@ const Page = () => {
   };
 
   return (
-    <div className="w-screen flex justify-center items-center flex-col py-20">
+    <div className="w-screen flex justify-center items-center flex-col py-20 p-3">
       {loaded?
-      <><div className="w-[750px] flex flex-col justify-center items-center">
-          <p className="text-lg font-black p-5">
+      <><div className="lg:w-[750px] flex flex-col justify-center items-center">
+          <p className="lg:text-lg sm:text-sm font-black p-5">
             Which of these best describes your place?
           </p>
-          <div className=" grid grid-cols-3 w-full gap-10">
+          <div className=" grid grid-cols-3 w-full lg:gap-10 sm:gap-3">
             {places.map((item) => (
               <motion.div
                 key={item.name}
                 whileHover={{ x: -3 }}
                 transition={{ duration: 0.5 }}
-                className={`transtion-bg flex flex-col justify-center items-center gap-3 p-16 border rounded-xl hover:cursor-pointer hover:bg-lightGray ${place == item.name && "border-primary border-2 bg-lightGray"}`}
+                className={`transtion-bg flex flex-col justify-center items-center gap-3 lg:p-16 sm:p-4 border rounded-xl hover:cursor-pointer hover:bg-lightGray ${place == item.name && "border-primary border-2 bg-lightGray"}`}
                 onClick={() => setPlace(item.name)}
               >
-                <Image src={item.icon} alt={item.name} width={50} height={50} />
-                <p className="text-sm font-bold">{item.name}</p>
+                <Image src={item.icon} alt={item.name} width={50} height={50} className="lg:w-20 lg:h-20 sm:w-5 sm:h-5"/>
+                <p className="lg:text-sm sm:text-xsm font-bold">{item.name}</p>
               </motion.div>
             ))}
           </div>
-        </div><div className="w-[750px] flex flex-col justify-center">
-            <p className="text-lg font-black pt-10">Confirm your address</p>
-            <p className="text-md text-darkGray pb-4">
+        </div><div className="lg:w-[750px] flex flex-col justify-center">
+            <p className="lg:text-lg sm:text-sm font-black pt-10">Confirm your address</p>
+            <p className="lg:text-md sm:text-xsm text-darkGray pb-4">
               Your address is only shared with guests after they’ve made a
               reservation.
             </p>
@@ -268,18 +268,19 @@ const Page = () => {
                 type="text"
                 label="District" />
               <Input
+              className="text-[10px]"
                 onChange={(e) => setProvince(e.target.value)}
                 type="text"
                 label="Province" />
             </div>
-          </div><div className="w-[750px] flex flex-col justify-center">
-            <p className="text-lg font-black pt-10">
+          </div><div className="lg:w-[750px] flex flex-col justify-center">
+            <p className="lg:text-lg sm:text-sm font-black pt-10">
               Share some basics about your place
             </p>
-            <p className="text-md text-darkGray pb-4">
+            <p className="lg:text-md sm:text-xsm text-darkGray pb-4">
               You'll add more details later, like bed types.
             </p>
-            <div className="flex items-center justify-between border-b border-lightGray p-4 text-md">
+            <div className="flex items-center justify-between border-b border-lightGray p-4 lg:text-md sm:text-sm">
               <p className="">Guest</p>
               <span className="flex items-center gap-2">
                 <CiCircleMinus
@@ -293,7 +294,7 @@ const Page = () => {
                   size={40} />
               </span>
             </div>
-            <div className="flex items-center justify-between border-b border-lightGray p-4 text-md">
+            <div className="flex items-center justify-between border-b border-lightGray p-4 lg:text-md sm:text-sm">
               <p className="">Bedroom</p>
               <span className="flex items-center gap-2">
                 <CiCircleMinus
@@ -307,7 +308,7 @@ const Page = () => {
                   size={40} />
               </span>
             </div>
-            <div className="flex items-center justify-between border-b border-lightGray p-4 text-md">
+            <div className="flex items-center justify-between border-b border-lightGray p-4 lg:text-md sm:text-sm">
               <p className="">Beds</p>
               <span className="flex items-center gap-2">
                 <CiCircleMinus
@@ -321,7 +322,7 @@ const Page = () => {
                   size={40} />
               </span>
             </div>
-            <div className="flex items-center justify-between p-4 text-md">
+            <div className="flex items-center justify-between p-4 lg:text-md sm:text-sm">
               <p className="">Bathrooms</p>
               <span className="flex items-center gap-2">
                 <CiCircleMinus
@@ -335,72 +336,72 @@ const Page = () => {
                   size={40} />
               </span>
             </div>
-          </div><div className="w-[750px] flex flex-col justify-center">
-            <p className="text-lg font-black pt-10">
+          </div><div className="lg:w-[750px] flex flex-col justify-center">
+            <p className="lg:text-lg sm:text-sm font-black pt-10">
               Tell guests what your place has to offer
             </p>
-            <div className=" grid grid-cols-3 w-full gap-10">
+            <div className=" grid grid-cols-3 w-full lg:gap-10 sm:gap-3">
               {placeAmenities.map((item) => (
                 <motion.div
                   key={item.name}
                   whileHover={{ x: -3 }}
                   transition={{ duration: 0.5 }}
-                  className={`transtion-bg flex flex-col justify-center items-center gap-3 p-16 border rounded-xl hover:cursor-pointer hover:bg-lightGray ${PlaceAmenities.find((i) => i == item.name) &&
+                  className={`transtion-bg flex flex-col justify-center items-center gap-3 lg:p-16 sm:p-4 border rounded-xl hover:cursor-pointer hover:bg-lightGray ${PlaceAmenities.find((i) => i == item.name) &&
                     "border-primary border-2 bg-lightGray"}`}
                   onClick={() => PlaceAmenities.find((i) => i == item.name)
                     ? handleRemovePlaceAmenities(item.name)
                     : handleAddPlaceAmenities(item.name)}
                 >
-                  <Image src={item.icon} alt={item.name} width={50} height={50} />
-                  <p className="text-sm font-bold">{item.name}</p>
+                <Image src={item.icon} alt={item.name} width={50} height={50} className="lg:w-20 lg:h-20 sm:w-5 sm:h-5"/>
+                <p className="lg:text-sm sm:text-xsm font-bold">{item.name}</p>
                 </motion.div>
               ))}
             </div>
-            <p className="text-md text-darkGray pb-4">
+            <p className="lg:text-md sm:text-sm text-darkGray py-4">
               You'll add more details later, like bed types.
             </p>
-            <div className=" grid grid-cols-3 w-full gap-10">
+            <div className=" grid grid-cols-3 w-full lg:gap-10 sm:gap-3">
               {placeStandoutAmenities.map((item) => (
                 <motion.div
                   key={item.name}
                   whileHover={{ x: -3 }}
                   transition={{ duration: 0.5 }}
-                  className={`transtion-bg flex flex-col justify-center items-center gap-3 p-16 border rounded-xl hover:cursor-pointer hover:bg-lightGray ${PlaceStandoutAmenities.find((i) => i == item.name) &&
+                  className={`transtion-bg flex flex-col justify-center items-center gap-3 lg:p-16 sm:p-4 border rounded-xl hover:cursor-pointer hover:bg-lightGray ${PlaceStandoutAmenities.find((i) => i == item.name) &&
                     "border-primary border-2 bg-lightGray"}`}
                   onClick={() => PlaceStandoutAmenities.find((i) => i == item.name)
                     ? handleRemovePlaceStandoutAmenities(item.name)
                     : handleAddPlaceStandoutAmenities(item.name)}
                 >
-                  <Image src={item.icon} alt={item.name} width={50} height={50} />
-                  <p className="text-sm font-bold">{item.name}</p>
+                <Image src={item.icon} alt={item.name} width={50} height={50} className="lg:w-20 lg:h-20 sm:w-5 sm:h-5"/>
+                <p className="lg:text-sm sm:text-xsm font-bold">{item.name}</p>
                 </motion.div>
               ))}
             </div>
-            <p className="text-md text-darkGray py-4">
+            <p className="lg:text-md sm:text-sm text-darkGray py-4">
               Do you have any standout amenities?
             </p>
-            <div className=" grid grid-cols-3 w-full gap-10">
+            <div className=" grid grid-cols-3 w-full lg:gap-10 sm:gap-3">
               {SafetyItems.map((item) => (
                 <motion.div
                   key={item.name}
                   whileHover={{ x: -3 }}
                   transition={{ duration: 0.5 }}
-                  className={`transtion-bg flex flex-col justify-center items-center gap-3 p-16 border rounded-xl hover:cursor-pointer hover:bg-lightGray ${safetyItems.find((i) => i == item.name) &&
+                  className={`transtion-bg flex flex-col justify-center items-center gap-3 lg:p-16 sm:p-4 border rounded-xl hover:cursor-pointer hover:bg-lightGray ${safetyItems.find((i) => i == item.name) &&
                     "border-primary border-2 bg-lightGray"}`}
                   onClick={() => safetyItems.find((i) => i == item.name)
                     ? handleRemoveSafetyItems(item.name)
                     : handleAddSafetyItems(item.name)}
                 >
-                  <Image src={item.icon} alt={item.name} width={50} height={50} />
-                  <p className="text-sm font-bold">{item.name}</p>
+                <Image src={item.icon} alt={item.name} width={50} height={50} className="lg:w-20 lg:h-20 sm:w-5 sm:h-5"/>
+                <p className="lg:text-sm sm:text-xsm font-bold">{item.name}</p>
                 </motion.div>
               ))}
             </div>
-          </div><div className="w-[750px] flex flex-col justify-center">
-            <p className="text-lg font-black pt-10">
+          </div><div className="lg:w-[750px] flex flex-col justify-center">
+            <p className="lg:text-lg sm:text-sm font-black pt-10">
               Add some photos of your Place
             </p>
-            <p className="text-md text-darkGray pb-4">
+            <p className="lg:text-md sm:text-xsm text-darkGray pb-4">
               You'll need 5 photos to get started. You can add more or make changes
               later.
             </p>
@@ -413,9 +414,9 @@ const Page = () => {
                 <img
                   src={URL.createObjectURL(selectedImage[0])}
                   alt="Selected"
-                  className={`rounded-[10px] w-full h-[500px] mb-3`} />
-              </span>,
-              <div className="grid grid-cols-2 gap-2">
+                  className={`lg:w-[380px] lg:h-[300px] sm:w-auto sm:h-auto  rounded-[10px] `} />
+                  </span>,
+              <div className="grid lg:grid-cols-2 gap-2">
                 {selectedImage.slice(1).map((pic, index) => (
                   <span>
                     <HiOutlineXMark
@@ -426,14 +427,14 @@ const Page = () => {
                     <img
                       src={URL.createObjectURL(pic)}
                       alt="Selected"
-                      className={`w-[380px] h-[300px] rounded-[10px] `} />
-                  </span>
+                      className={`lg:w-[380px] lg:h-[300px] sm:w-auto sm:h-auto  rounded-[10px] `} />
+                      </span>
                 ))}
               </div>,
             ]}
             <label
               htmlFor="fileInput"
-              className={`flex items-center justify-center w-[340px] h-[230px] rounded-[10px] border border-lightGray hover:bg-lightGray transtion-bg`}
+              className={`flex items-center justify-center lg:w-[380px] lg:h-[300px] sm:w-[330px] sm:h-[310px]  rounded-[10px] border border-lightGray hover:bg-lightGray transtion-bg`}
             >
               <HiOutlinePlus className="cursor-pointer" size={40} />
             </label>
@@ -444,29 +445,30 @@ const Page = () => {
               onChange={handleImageUpload}
               style={{ display: "none" }}
               multiple />
-          </div><div className="w-[750px] flex flex-col justify-center">
-            <p className="text-lg font-black pt-10">
+          </div>
+          <div className="lg:w-[750px] flex flex-col justify-center">
+            <p className="lg:text-lg sm:text-sm font-black pt-10">
               Now, let's give your house a title
             </p>
-            <p className="text-md text-darkGray pb-4">
-              Short titles work best. Have fun with it—you can always change it
-              later.
+            <p className="lg:text-md sm:text-sm text-darkGray pb-4">
+              Short titles work best. Have fun with it.
             </p>
             <textarea
               ref={placeName}
-              className="h-[300px] p-8 border border-lightGray outline-darkGray rounded-[5px]" />
-          </div><div className="w-[750px] flex flex-col justify-center">
-            <p className="text-lg font-black pt-10">Create your description</p>
-            <p className="text-md text-darkGray pb-4">
+              className="lg:h-[300px] sm:h-[200px] p-8 border border-lightGray outline-darkGray rounded-[5px]" />
+          </div>
+          <div className="lg:w-[750px] flex flex-col justify-center">
+          <p className="lg:text-lg sm:text-sm font-black pt-10">Create your description</p>
+          <p className="lg:text-md sm:text-sm text-darkGray pb-4">
               Share what makes your place special.
             </p>
             <textarea
               ref={placeDescription}
-              className="h-[300px] p-8 border border-lightGray outline-darkGray rounded-[5px]" />
-          </div><div className="w-[750px] flex flex-col justify-center">
-            <p className="text-lg font-black pt-10">Now, set your price</p>
-            <p className="text-md text-darkGray pb-4">You can change it anytime.</p>
-            <span className="flex text-xxlg ">
+              className="lg:h-[300px] sm:h-[200px] p-8 border border-lightGray outline-darkGray rounded-[5px]" />
+          </div><div className="lg:w-[750px] flex flex-col justify-center">
+            <p className="lg:text-lg sm:text-sm font-black pt-10">Now, set your price</p>
+            <p className="lg:text-md sm:text-sm text-darkGray pb-4">You can change it anytime.</p>
+            <span className="flex lg:text-xxlg sm:text-lg ">
               <p>$</p>
               <input
                 value={price}
