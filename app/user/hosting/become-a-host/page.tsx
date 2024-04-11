@@ -202,22 +202,20 @@ const Page = () => {
       status:"avalible"
     };
 
-    console.log(data)
+    try {
+      const res=await axios.post("/api/hosting", data);
+      router.push(`/user/place/${res.data.message.data[0].id}`)
 
-    // try {
-    //   const res=await axios.post("/api/hosting", data);
-    //   router.push(`/user/place/${res.data.message.data[0].id}`)
-
-    //   toast({
-    //     className: "rounded-[5px] p-4 text-green-600",
-    //     description: "Your place pulished succsesfully",
-    //   });
-    // } catch (err) {
-    //   toast({
-    //     className: "rounded-[5px] p-4 text-red-600",
-    //     description: "An error happened while pulishing your place",
-    //   });
-    // }
+      toast({
+        className: "rounded-[5px] p-4 text-green-600",
+        description: "Your place pulished succsesfully",
+      });
+    } catch (err) {
+      toast({
+        className: "rounded-[5px] p-4 text-red-600",
+        description: "An error happened while pulishing your place",
+      });
+    }
   };
 
   return (
