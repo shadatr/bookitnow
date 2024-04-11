@@ -150,13 +150,19 @@ const Page = () => {
         description: "You should add more than one image to your place",
       });
       return;
-    } else if (!placeName) {
+    } else if (!placeName.current?.value) {
       toast({
         className: "rounded-[5px] p-4 text-red-600",
         description: "You should fill the name of the place",
       });
       return;
-    }    
+    }else if (!placeDescription.current?.value) {
+      toast({
+        className: "rounded-[5px] p-4 text-red-600",
+        description: "You should fill the name of the place",
+      });
+      return;
+    }     
     setLoaded(false)
 
     let base64Img: string[] = [];
@@ -198,7 +204,7 @@ const Page = () => {
 
     try {
       const res=await axios.post("/api/hosting", data);
-      router.push(`/place/${res.data.message.data[0].id}`)
+      router.push(`/user/place/${res.data.message.data[0].id}`)
 
       toast({
         className: "rounded-[5px] p-4 text-green-600",
