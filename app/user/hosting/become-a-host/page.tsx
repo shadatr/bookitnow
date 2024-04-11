@@ -406,7 +406,7 @@ const Page = () => {
               later.
             </p>
             {selectedImage.length > 0 && [
-              <span>
+              <span className="flex">
                 <HiOutlineXMark
                   className="absolute cursor-pointer"
                   size="30"
