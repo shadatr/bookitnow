@@ -11,17 +11,17 @@ export async function POST(request: Request,  { params }: { params: { id: string
 
   try {
     await Promise.all(
-        dataReq.map(async (item: any) => {
+        dataReq.days.map(async (item: any) => {
             const data={
                 place_id:params.id,
                 date:item
             }
-          await supabase.from("tb_reservations").insert(data);
+          const res=await supabase.from("tb_reservations").insert(data);
+          console.log(res.error)
         })
       )
-    const data = await supabase.from("tb_reservations").insert(dataReq).select();
-
-    return new Response(JSON.stringify({ message: data }), {
+      
+    return new Response(JSON.stringify({ message: "done" }), {
       status: 200,
       headers: { revalidate: dynamic },
     });

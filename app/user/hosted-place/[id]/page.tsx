@@ -161,6 +161,8 @@ const Page = ({ params }: { params: { id: string } }) => {
       days: days,
     };
 
+    console.log(days)
+
     axios.post(`/api/reserve/${hostedPlaces?.id}`, data);
     setSelectedDates([]);
     setRefresh(!refresh);
