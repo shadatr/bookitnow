@@ -127,6 +127,12 @@ const Page = () => {
   };
 
   const handleSave = async () => {
+    const placeNameValue= placeName.current?.value;
+    const placeDescriptionValue= placeDescription.current?.value;
+
+    console.log(placeNameValue)
+    console.log(placeDescriptionValue)
+    
     if (!place) {
       toast({
         className: "rounded-[5px] p-4 text-red-600",
@@ -144,19 +150,15 @@ const Page = () => {
         description: "You should fill all location fields",
       });
       return;
-    } else if (selectedImage.length < 3) {
-      toast({
-        className: "rounded-[5px] p-4 text-red-600",
-        description: "You should add more than one image to your place",
-      });
-      return;
-    } else if (!placeName.current?.value) {
-      toast({
-        className: "rounded-[5px] p-4 text-red-600",
-        description: "You should fill the name of the place",
-      });
-      return;
-    }else if (!placeDescription.current?.value) {
+    } 
+    //  else if (!placeName.current?.value) {
+    //   toast({
+    //     className: "rounded-[5px] p-4 text-red-600",
+    //     description: "You should fill the name of the place",
+    //   });
+    //   return;
+    // }
+    else if (!placeDescription.current?.value) {
       toast({
         className: "rounded-[5px] p-4 text-red-600",
         description: "You should fill the name of the place",
@@ -195,27 +197,29 @@ const Page = () => {
       bed_number: bedNumber,
       bath_room_number: bathroomNumber,
       amenities: combinedAmenities,
-      place_name: placeName.current?.value,
-      place_description: placeDescription.current?.value,
+      place_name: placeNameValue,
+      place_description: placeDescriptionValue,
       price: price,
       images: base64Img,
       status:"avalible"
     };
 
-    try {
-      const res=await axios.post("/api/hosting", data);
-      router.push(`/user/place/${res.data.message.data[0].id}`)
+    console.log(data)
 
-      toast({
-        className: "rounded-[5px] p-4 text-green-600",
-        description: "Your place pulished succsesfully",
-      });
-    } catch (err) {
-      toast({
-        className: "rounded-[5px] p-4 text-red-600",
-        description: "An error happened while pulishing your place",
-      });
-    }
+    // try {
+    //   const res=await axios.post("/api/hosting", data);
+    //   router.push(`/user/place/${res.data.message.data[0].id}`)
+
+    //   toast({
+    //     className: "rounded-[5px] p-4 text-green-600",
+    //     description: "Your place pulished succsesfully",
+    //   });
+    // } catch (err) {
+    //   toast({
+    //     className: "rounded-[5px] p-4 text-red-600",
+    //     description: "An error happened while pulishing your place",
+    //   });
+    // }
   };
 
   return (
