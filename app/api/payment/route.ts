@@ -28,8 +28,8 @@ export async function POST(request: Request) {
         },
       ],
       mode: "payment",
-      cancel_url: `${host}/payment/error`,
-      success_url: `${host}/payment/success`,
+      cancel_url: `${host}/user/payment/error`,
+      success_url: `${host}/user/payment/success`,
     });
 
     await Promise.all(
