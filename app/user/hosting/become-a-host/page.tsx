@@ -129,10 +129,8 @@ const Page = () => {
   const handleSave = async () => {
     const placeNameValue= placeName.current?.value;
     const placeDescriptionValue= placeDescription.current?.value;
+    const placeCountryValue= country.current?.value;
 
-    console.log(placeNameValue)
-    console.log(placeDescriptionValue)
-    
     if (!place) {
       toast({
         className: "rounded-[5px] p-4 text-red-600",
@@ -151,13 +149,13 @@ const Page = () => {
       });
       return;
     } 
-    //  else if (!placeName.current?.value) {
-    //   toast({
-    //     className: "rounded-[5px] p-4 text-red-600",
-    //     description: "You should fill the name of the place",
-    //   });
-    //   return;
-    // }
+     else if (!placeName.current?.value) {
+      toast({
+        className: "rounded-[5px] p-4 text-red-600",
+        description: "You should fill the name of the place",
+      });
+      return;
+    }
     else if (!placeDescription.current?.value) {
       toast({
         className: "rounded-[5px] p-4 text-red-600",
@@ -191,7 +189,7 @@ const Page = () => {
       postalCode: postalCode,
       district: district,
       province: province,
-      country: country.current?.value,
+      country: placeCountryValue,
       guest_number: guestNumber,
       bed_room_number: bedRoomNumber,
       bed_number: bedNumber,
