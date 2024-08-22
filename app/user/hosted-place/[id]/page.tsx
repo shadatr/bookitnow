@@ -313,7 +313,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </div>
                 <div className=" border-b w-full border-lightGray" />
                 <p className="lg:py-5 sm:py-2 lg:text-md sm:text-sm font-medium">
-                  Hosted by {hostedPlaces?.user_email}
+                  Hosted by {hostedPlaces?.host_name}
                 </p>
                 <div className=" border-b w-full border-lightGray" />
                 <span className="lg:w-[700px] sm:w-[300px] sm:text-xxsm lg:text-sm flex">

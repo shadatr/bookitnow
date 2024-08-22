@@ -181,7 +181,7 @@ const Page = () => {
 
     const data: PlaceType = {
       user_id: session?.user.id,
-      user_email: session?.user.email,
+      host_name: session?.user.user_metadata.full_name,
       placeType: place,
       neighborhood: neighborhood,
       streetAddress: streetAddress,

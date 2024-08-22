@@ -72,7 +72,7 @@ const Page =  () => {
       );
       const filteredEmails=uniqueEmails.filter((email) => email !== undefined);
       setEmails(filteredEmails);
-      setSelectedEmail(filteredEmails[0].user_email)
+      setSelectedEmail(filteredEmails[0].host_name);
     };
     handleUpload();
   }, [refresh]);
@@ -109,10 +109,10 @@ const Page =  () => {
             <span
               key={index}
               onClick={() => {
-                setSelectedEmail(item.user_email), setSelectedPlace(item.id);
+                setSelectedEmail(item.host_name), setSelectedPlace(item.id);
               }}
               className={` flex flex-col transition-bg p-4 rounded-large lg:text-sm sm:text-xxsm ${
-                selectedEmail === item.user_email &&
+                selectedEmail === item.host_name &&
                 "bg-secondary font-bold border border-darkGray "
               }`}
             >
@@ -120,7 +120,7 @@ const Page =  () => {
               {item.place_name}
                 </span>
                 <span className="lg:text-xsm sm:text-xxsm">
-              {item.user_email} 
+              {item.host_name} 
                 </span>
             </span>
           )):<div className="font-black p-4">There is no user to connect yet!</div>}
