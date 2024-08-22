@@ -13,6 +13,7 @@ const page = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setmessage] = useState("");
+  
   const signUpNewUser = async () => {
     if (password != confirmPassword) {
       toast({

@@ -2,7 +2,7 @@
 import { FavoritesType, PlaceType, ReservedType } from "@/types";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import Image, { ImageLoader } from "next/image";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { FiPlus } from "react-icons/fi";
 import { Calendar } from "@demark-pro/react-booking-calendar";
@@ -13,6 +13,7 @@ import { supabase } from "@/lib/supabase";
 import { FaHeart } from "react-icons/fa";
 import { toast } from "@/components/ui/use-toast";
 import { dotWave } from "ldrs";
+import { Modal, ModalTrigger } from "@/components/ui/animated-modal";
 
 const Amenities = [
   { name: "Wifi", icon: "/wifi.png" },
@@ -69,6 +70,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       setReserved(data2.data.message.data);
       const data3 = await supabase.auth.getSession();
       setSession(data3.data.session);
+
       const data4 = await axios.get(
         `/api/favorites/${data3.data.session?.user.id}`
       );
@@ -88,6 +90,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     };
     handleUpload();
   }, [refresh]);
+  console.log(session?.access_token);
 
   const isReserved = (date: Date) => {
     for (let i = 0; i < reserved.length; i++) {
@@ -99,11 +102,11 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   const handleReserve = async () => {
-    const { data, error } = await supabase.auth.getUser()
+    const { data, error } = await supabase.auth.getUser();
     if (error || !data?.user) {
-      router.push('/login')
+      router.push("/login");
     }
-    
+
     if (selectedDates.length == 2) {
       const amount = hostedPlace?.price
         ? hostedPlace?.price * numberOfDays * 0.1 +
@@ -149,7 +152,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       }
     } else {
       toast({
-        className: "rounded-[5px] p-4 text-red-600",
+        className: "rounded-[5px] p-4 text-red-600 bg-secondary",
         description: "You should select the reservesions dates",
       });
     }
@@ -162,7 +165,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     };
     axios.post("/api/favorites/1", data).then((res) =>
       toast({
-        className: "rounded-[5px] p-4 text-green-600",
+        className: "rounded-[5px] p-4 text-green-600 bg-secondary",
         description: res.data.message,
       })
     );
@@ -170,6 +173,16 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   dotWave.register();
+
+  const imageUrl = `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(
+    hostedPlace?.host_name || ""
+  )}`;
+
+  const loaderProp: ImageLoader = ({ src }: { src: string }) => {
+    return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(
+      src
+    )}`;
+  };
 
   return (
     <div className="w-[100%] flex justify-center items-center">
@@ -179,34 +192,36 @@ const Page = ({ params }: { params: { id: string } }) => {
             <span className=" lg:text-xmd sm:text-sm font-bold">
               {hostedPlace?.place_name}
             </span>
-            {session?.user&&
-            <button
-              onClick={handleAddToFavorites}
-              className="flex items-center lg:text-sm sm:text-xsm"
-            >
-              <FaHeart
-                className={
-                  favorites.find((i) => i.place_id == hostedPlace?.id)
-                    ? "text-pink"
-                    : ""
-                }
-              />{" "}
-              Add to favorites
-            </button>
-            }
+            {session?.user && (
+              <button
+                onClick={handleAddToFavorites}
+                className="flex items-center lg:text-sm sm:text-xsm"
+              >
+                <FaHeart
+                  className={
+                    favorites.find((i) => i.place_id == hostedPlace?.id)
+                      ? "text-pink"
+                      : ""
+                  }
+                />
+                Add to favorites
+              </button>
+            )}
           </div>
           {hostedPlace?.images && (
             <div className="flex lg:flex-row sm:flex-col gap-1">
-              <Image
-                onClick={() => setImagesOpened(true)}
-                width={700}
-                height={500}
-                src={hostedPlace?.images[0]}
-                alt="Selected"
-                className={`lg:w-[550px] lg:h-[360px] sm:w-[350px] sm:h-[250px] cursor-pointer`}
-              />
+              <span className=" inline-block overflow-hidden lg:w-[650px] lg:h-[450px] sm:w-[350px] sm:h-[250px]">
+                <Image
+                  onClick={() => setImagesOpened(true)}
+                  width={100}
+                  height={100}
+                  src={hostedPlace?.images[0]}
+                  alt="Selected"
+                  className={`w-full h-full cursor-pointer object-cover`}
+                />
+              </span>
               <div className="grid grid-cols-2 gap-1">
-                {hostedPlace.images.slice(0, 4).map((pic, index) => (
+                {hostedPlace.images.slice(1, 5).map((pic, index) => (
                   <span key={index}>
                     {index == 3 && hostedPlace?.images.length > 5 ? (
                       <span className="absolute items-center justify-center  p-2 bg-image">
@@ -223,23 +238,25 @@ const Page = ({ params }: { params: { id: string } }) => {
                     ) : (
                       ""
                     )}
-                    <Image
-                      onClick={() => setImagesOpened(true)}
-                      width={300}
-                      height={180}
-                      src={pic}
-                      alt="Selected"
-                      className={`lg:w-[280px] lg:h-[175px] sm:w-[170px] sm:h-[140px]  cursor-pointer `}
-                    />
+                    <span className=" inline-block overflow-hidden lg:w-[225px] lg:h-[220px] sm:w-[170px] sm:h-[140px] ">
+                      <Image
+                        onClick={() => setImagesOpened(true)}
+                        width={300}
+                        height={180}
+                        src={pic}
+                        alt="Selected"
+                        className={`cursor-pointer w-full h-full object-cover`}
+                      />
+                    </span>
                   </span>
                 ))}
               </div>
             </div>
           )}
           {imagesOpened && (
-            <div className="absolute right-0 top-0 bg-secondary w-screen h-[100h] z-100">
+            <div className="absolute right-0 top-0 bg-secondary w-screen h-[100h] z-20">
               <HiOutlineXMark
-                className="cursor-pointer  m-5 "
+                className="cursor-pointer  m-5"
                 size="30"
                 onClick={() => setImagesOpened(false)}
               />
@@ -252,14 +269,14 @@ const Page = ({ params }: { params: { id: string } }) => {
                       height={180}
                       src={pic}
                       alt="Selected"
-                      className={`lg:w-[800px] sm:w-[300px] h-auto `}
+                      className={`lg:w-[600px] sm:w-[300px] h-auto `}
                     />
                   </span>
                 ))}
               </div>
             </div>
           )}
-          <div className="flex flex-col">
+          <div className="flex flex-col ">
             <span className=" text-md font-bold">
               {hostedPlace?.country} , {hostedPlace?.province}
             </span>
@@ -270,41 +287,133 @@ const Page = ({ params }: { params: { id: string } }) => {
             </span>
           </div>
           <div className=" border-b w-full border-lightGray" />
-          <p className="lg:py-5 sm:py-2 lg:text-md sm:text-sm font-medium">
-            Hosted by {hostedPlace?.user_email}
-          </p>
-          <div className=" border-b w-full border-lightGray" />
-          <span className="lg:w-[700px] sm:w-[300px] sm:text-xxsm lg:text-sm flex">
-            {hostedPlace?.place_description}
-          </span>
-          <div className=" border-b w-full border-lightGray" />
-
-          <div className="flex lg:justify-between sm:flex-col lg:flex-row w-full">
+          <div className="flex gap-3 items-center  ">
+            <div className="relative lg:w-[40px] lg:h-[40px] sm:w-[20px] sm:h-[20px] overflow-hidden rounded-l-2xl z-0">
+              <Image
+                src={imageUrl}
+                alt={"image"}
+                fill
+                style={{ objectFit: "cover" }}
+                className="rounded-full bg-lightBlue z-0"
+                loader={loaderProp}
+              />
+            </div>
+            <p className="lg:py-2 sm:py-1 lg:text-sm sm:text-xsm font-medium">
+              Hosted by {hostedPlace?.host_name}
+            </p>
+          </div>
+          <div className="flex lg:flex-row sm:flex-col ">
             <div>
-              <span className="grid gap-5">
-                <p className="sm:text-sm lg:text-md font-bold">What this place offers</p>
-                <div className="grid grid-cols-2 lg:gap-10 sm:gap-5 lg:w-[600px] sm:w-[300px]">
-                  {hostedPlace?.amenities.map((item, index) => {
-                    const amt = Amenities.find((i) => i.name == item);
-                    return (
-                      <span className="flex items-center gap-2" key={index}>
-                        <Image
-                          src={amt?.icon || ""}
-                          alt={amt?.name || ""}
-                          width={30}
-                          height={30}
-                          className="lg:w-30 lg:h-30 sm:w-5 sm:h-5"
-                        />
-                        <p className="lg:text-sm sm:text-xsm font-bold">{amt?.name}</p>
-                      </span>
-                    );
-                  })}
-                </div>
+              <div className=" border-b w-full border-lightGray" />
+              <span className="lg:w-[700px] sm:w-[300px] sm:text-xxsm lg:text-sm flex">
+                {hostedPlace?.place_description}
               </span>
               <div className=" border-b w-full border-lightGray py-5" />
-                  {!imagesOpened&&
-                  <div className=" flex lg:flex-row sm:flex-col lg:gap-60 sm:gap-20 w-full">
-              <div className="lg:w-[500px] sm:w-[300px] z-10">
+
+              <div className="flex lg:justify-between sm:flex-col lg:flex-row w-full">
+                <div>
+                  <span className="grid gap-5">
+                    <p className="sm:text-sm lg:text-md font-bold">
+                      What this place offers
+                    </p>
+                    <div className="grid grid-cols-2 lg:gap-10 sm:gap-5 lg:w-[600px] sm:w-[300px]">
+                      {hostedPlace?.amenities.map((item, index) => {
+                        const amt = Amenities.find((i) => i.name == item);
+                        return (
+                          <span className="flex items-center gap-2" key={index}>
+                            <Image
+                              src={amt?.icon || ""}
+                              alt={amt?.name || ""}
+                              width={30}
+                              height={30}
+                              className="lg:w-30 lg:h-30 sm:w-5 sm:h-5"
+                            />
+                            <p className="lg:text-sm sm:text-xsm font-bold">
+                              {amt?.name}
+                            </p>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className=" flex flex-col lg:gap-10 sm:gap-3 w-full justify-center items-center">
+              <div className="border border-lightGray rounded-2xl shadow-lg lg:p-8 sm:p-4 sm:mt-10 lg:mx-6 sm:mx-3 flex flex-col gap-3 lg:h-[400px] sm:h-[300px] lg:w-[400px] sm:w-[300px] lg:text-sm sm:text-xsm ">
+                <p className="font-bold lg:text-md sm:text-sm">
+                  {hostedPlace?.price} $ night
+                </p>
+                <div className="flex justify-center items-center">
+                  <span className="border rounded-l-[10px] py-2 px-8 lg:text-xsm sm:text-xxsm">
+                    <p className="font-bold">CHECK-IN</p>
+                    <p>
+                      {selectedDates[0]
+                        ? new Date(
+                            selectedDates[0].getTime() + 24 * 60 * 60 * 1000
+                          )
+                            .toISOString()
+                            .split("T")[0]
+                        : "--"}
+                    </p>
+                  </span>
+                  <span className="border py-2 rounded-r-[10px] px-8 lg:text-xsm sm:text-xxsm">
+                    <p className="font-bold">CHECK-OUT</p>
+                    <p>
+                      {selectedDates[1]
+                        ? selectedDates[1]?.toISOString().split("T")[0]
+                        : "--"}
+                    </p>
+                  </span>
+                </div>
+                <div
+                  className="flex justify-center items-center"
+                  onClick={handleReserve}
+                >
+                  <Modal>
+                    <ModalTrigger className="bg-pink text-secondary lg:p-3 sm:p-2 lg:text-sm sm:text-xsm font-bold rounded-[10px] items-center flex justify-center group/modal-btn w-[250px]">
+                      <span className="group-hover/modal-btn:translate-x-40 text-center transition duration-500">
+                        Reserve
+                      </span>
+                      <div className="-translate-x-40 group-hover/modal-btn:translate-x-0 flex items-center justify-center absolute inset-0 transition duration-500 text-white z-20">
+                        ✈️
+                      </div>
+                    </ModalTrigger>
+                  </Modal>
+                </div>
+                <div className="flex justify-between font-medium">
+                  <span>
+                    {hostedPlace?.price}$ x {numberOfDays} nights
+                  </span>
+                  <span>
+                    {hostedPlace?.price
+                      ? hostedPlace?.price * numberOfDays
+                      : ""}
+                    $
+                  </span>
+                </div>
+                <div className="flex justify-between font-medium ">
+                  <span>Service fees</span>
+                  <span>
+                    {hostedPlace?.price
+                      ? hostedPlace?.price * numberOfDays * 0.1
+                      : ""}
+                    $
+                  </span>
+                </div>
+                <div className="border border-b " />
+                <div className="flex justify-between font-medium lg:text-md sm:text-xsm">
+                  <span>Total</span>
+                  <span>
+                    {hostedPlace?.price && selectedDates.length > 1
+                      ? hostedPlace?.price * numberOfDays * 0.1 +
+                        hostedPlace?.price * numberOfDays
+                      : 0}
+                    $
+                  </span>
+                </div>
+              </div>
+              <div className="lg:w-[400px] sm:w-[300px] z-10">
                 <Calendar
                   classNamePrefix="calendar z-10"
                   selected={selectedDates}
@@ -341,68 +450,6 @@ const Page = ({ params }: { params: { id: string } }) => {
                   range={true}
                 />
               </div>
-            <div className="border border-lightGray rounded-2xl shadow-lg p-8 flex flex-col gap-3 h-[400px] lg:text-sm sm:text-xsm">
-              <p className="font-bold lg:text-md sm:text-sm">{hostedPlace?.price} $ night</p>
-              <div className="flex">
-                <span className="border rounded-l-[10px] py-2 px-8 lg:text-xsm sm:text-xxsm">
-                  <p className="font-bold">CHECK-IN</p>
-                  <p>
-                    {selectedDates[0]
-                      ? new Date(
-                          selectedDates[0].getTime() + 24 * 60 * 60 * 1000
-                        ) 
-                          .toISOString()
-                          .split("T")[0]
-                      : "--"}
-                  </p>
-                </span>
-                <span className="border py-2 rounded-r-[10px] px-8 lg:text-xsm sm:text-xxsm">
-                  <p className="font-bold">CHECK-OUT</p>
-                  <p>
-                    {selectedDates[1]
-                      ? selectedDates[1]?.toISOString().split("T")[0]
-                      : "--"}
-                  </p>
-                </span>
-              </div>
-              <button
-                className="bg-pink text-secondary lg:p-3 sm:p-2 lg:text-sm sm:text-xsm font-bold rounded-[10px]"
-                onClick={handleReserve}
-              >
-                Reserve
-              </button>
-              <div className="flex justify-between font-medium">
-                <span>
-                  {hostedPlace?.price}$ x {numberOfDays} nights
-                </span>
-                <span>
-                  {hostedPlace?.price ? hostedPlace?.price * numberOfDays : ""}$
-                </span>
-              </div>
-              <div className="flex justify-between font-medium ">
-                <span>Service fees</span>
-                <span>
-                  {hostedPlace?.price
-                    ? hostedPlace?.price * numberOfDays * 0.1
-                    : ""}
-                  $
-                </span>
-              </div>
-              <div className="border border-b " />
-              <div className="flex justify-between font-medium lg:text-md sm:text-xsm">
-                <span>Total</span>
-                <span>
-                  {hostedPlace?.price && selectedDates.length > 1
-                    ? hostedPlace?.price * numberOfDays * 0.1 +
-                      hostedPlace?.price * numberOfDays
-                    : 0}
-                  $
-                </span>
-              </div>
-            </div>
-            </div>
-
-                  }
             </div>
           </div>
         </div>

@@ -5,13 +5,13 @@ import { supabase } from "@/lib/supabase";
 import { FavoritesType, PlaceType } from "@/types";
 import { Session } from "@supabase/supabase-js";
 import axios from "axios";
-import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import "ldrs/dotWave";
 import { useSearchParams } from "next/navigation";
 import Header from "@/components/Header";
+import { DirectionAwareHover } from "@/components/ui/direction-aware-hover";
 
 function Home() {
   const [hostedPlaces, setHostedPlaces] = useState<PlaceType[]>([]);
@@ -29,7 +29,7 @@ function Home() {
       } else {
         url = "/api/hosting";
       }
-      console.log(url);
+
       const data = await axios.get(url);
       setHostedPlaces(data.data.message.data);
       const data3 = await supabase.auth.getSession();
@@ -43,6 +43,8 @@ function Home() {
     };
     handleUpload();
   }, [refresh, searchParams]);
+
+  console.log(session?.user);
 
   const handleAddToFavorites = (hostedPlace_id?: number) => {
     const data = {
@@ -58,6 +60,7 @@ function Home() {
     });
   };
 
+
   return (
     <>
       <Header />
@@ -65,7 +68,7 @@ function Home() {
         {loaded ? (
           <div className="w-full flex flex-col items-center justify-center ">
             <SearchBar />
-            <div className="mt-5 text-[15px] grid lg:grid-cols-4 gap-5">
+            <div className="mt-5 text-[15px] grid lg:grid-cols-4 gap-3 pb-10">
               {hostedPlaces?.map((item, index) => (
                 <div className="w-[300px] ">
                   {session?.user.id && (
@@ -83,21 +86,25 @@ function Home() {
                   )}
                   <Link
                     href={`/user/place/${item.id}`}
-                    className="w-[280px] "
+                    className="w-[280px] flex-col flex"
                     key={index}
                   >
-                    <Image
-                      alt="image"
-                      src={item.images[0]}
-                      width={50}
-                      height={50}
-                      className="w-[300px] h-[280px] rounded-[10px] "
-                    />
-                    <p className="font-bold pt-2">{item.place_name}</p>
-                    <p>
-                      {item.country}, {item.province}
-                    </p>
-                    <p className="font-bold">{item.price}$ night</p>
+                    <div className=" relative flex items-center justify-center">
+                      <DirectionAwareHover imageUrl={item.images[0]}>
+                        <p className="font-bold text-[18px]">
+                          {item.country}, {item.province}
+                        </p>
+                        <p className="font-normal text-sm">
+                          ${item.price} / night
+                        </p>
+                      </DirectionAwareHover>
+                    </div>
+                    <span className="font-bold text-[17px] px-2">
+                      {item.place_name}
+                    </span>
+                    <span className="px-2 text-xsm text-gray-500">
+                      Hosted by {item.host_name}
+                    </span>
                   </Link>
                 </div>
               ))}

@@ -5,7 +5,7 @@ export type SelectMenuOption = (typeof COUNTRIES)[number];
 export type PlaceType = {
   id?: number;
   user_id?: string;
-  user_email?: string;
+  access_token?: string;
   placeType: string;
   neighborhood: string;
   streetAddress: string;
@@ -24,6 +24,7 @@ export type PlaceType = {
   price: number;
   images: string[];
   status: string;
+  host_name: string;
 };
 
 export type ReservationsType = {

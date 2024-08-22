@@ -18,7 +18,6 @@ const Header = () => {
   const router = useRouter();
   const isActive =
     typeof window !== "undefined" ? window.location.pathname : "";
-  const [scroll, setScroll] = useState(false);
 
   useEffect(() => {
     const getSession = async () => {
@@ -28,20 +27,7 @@ const Header = () => {
         console.log(data.session?.user.identities[1].identity_data?.avatar_url);
     };
     getSession();
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset > 30) {
-        setScroll(true);
-      } else {
-        setScroll(false);
-      }
-    };
 
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
   }, []);
 
   const logout = async () => {
@@ -67,7 +53,7 @@ const Header = () => {
             <Avatar>
               <AvatarImage
                 src={
-                  "https://github.com/shadcn.png"
+                  session.user.user_metadata.avatar_url ||""
                 }
               />
             </Avatar>

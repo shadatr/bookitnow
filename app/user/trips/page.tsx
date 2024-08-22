@@ -56,7 +56,7 @@ const Page = () => {
         <div className="border-b border-lightGray w-screen" />
         {uniquePlaces.length ? (
           uniquePlaces.map((item, index) => {
-            const selectedPlace = places.find((i) => i.id == item);
+            const selectedPlace = places.find((i) => i?.id == item);
             const selectedTrips = trips.filter((i) => i.place_id == item);
             return (
               <>

@@ -174,8 +174,8 @@ const SearchBar = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center ">
       <div
-        className={` flex items-center justify-between gap-10 border px-1 border-lightGray shadow-lg lg:w-[1050px] sm:w-[350px] overflow-x-auto py-2 lg:px-10 lg:rounded-full sm:rounded-[30px] z-20 mt-3 text-xsm ${
-          scroll ? "fixed top-0 bg-secondary" : ""
+        className={` flex items-center fixed  bg-secondary justify-between gap-10 border px-1 border-lightGray shadow-lg lg:w-[1050px] sm:w-[350px] overflow-x-auto py-2 lg:px-10 lg:rounded-full sm:rounded-[30px] z-20 mt-3 text-xsm ${
+          scroll ? "top-0" : "top-16"
         }`}>
         <div className="flex flex-col justify-center">
           <p className="px-6 font-bold lg:text-xsm sm:text-xxsm">Where</p>
@@ -342,7 +342,7 @@ const SearchBar = () => {
         />
         </div>
       </div>
-      <div className=" border-lightGray mt-8 border-b w-full" />
+      <div className=" border-lightGray mt-32 border-b w-full" />
       <div className="flex items-center gap-10 p-4 lg:w-auto sm:w-[300px] overflow-x-auto">
         {places.map((place) => (
           <span
